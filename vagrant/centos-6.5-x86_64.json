@@ -1,0 +1,154 @@
+{
+  "variables": {
+    "chef_version": "provisionerless",
+    "image_basename": "gq_centos-6.5",
+    "ISO": "CentOS-6.5-x86_64-bin-DVD1.iso",
+    "ISO_CHECKSUM": "83221db52687c7b857e65bfe60787838",
+    "ISO_CHECKSUM_TYPE": "md5",
+    "ISO_URL": "http://fedora.is/CentOS/6.5/isos/x86_64/CentOS-6.5-x86_64-bin-DVD1.iso",
+    "disk_size": "320",
+    "kickstart_path": "/centos-6.5/ks.cfg",
+    "gq_environment": "production"
+  },
+  "builders": [
+    {
+        "vm_name": "{{user `image_basename`}}",
+        "type": "vmware-iso",
+        "boot_command": [
+            "<esc>",
+            "<wait>linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-6.5/ks.cfg<enter>"
+        ],
+        "boot_wait": "10s",
+        "disk_size": "{{user `disk_size`}}000",
+        "guest_os_type": "centos-64",
+        "http_directory": "http",
+        "iso_urls": [
+            "../iso/{{user `ISO`}}",
+            "{{user `ISO_URL`}}"
+        ],
+        "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+        "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+        "ssh_password": "vagrant",
+        "ssh_username": "vagrant",
+        "ssh_wait_timeout": "10000s",
+        "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p",
+        "tools_upload_flavor": "linux",
+        "vmx_data": {
+          "ethernet0.virtualdev": "vmxnet3"
+        },
+        "output_directory": "builds/vmware/{{user `image_basename`}}"
+    },
+    {
+      "type": "qemu",
+      "output_directory": "builds/qemu/{{user `image_basename`}}-{{user `gq_environment`}}",
+      "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p",
+      "disk_size": "{{user `disk_size`}}000",
+      "format": "qcow2",
+      "accelerator": "kvm",
+      "http_directory": "http",
+      "http_port_min": 10082,
+      "http_port_max": 10089,
+      "ssh_host_port_min": 2222,
+      "ssh_host_port_max": 2229,
+      "ssh_username": "root",
+      "ssh_password": "greenqloud",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "headless": true,
+      "vnc_port_min": 5900,
+      "vnc_port_max": 5999,
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+      "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+      "iso_urls": [
+          "../iso/{{user `ISO`}}",
+          "{{user `ISO_URL`}}"
+      ],
+      "vm_name": "{{user `image_basename`}}",
+      "boot_command": [
+          "<esc>",
+          "<wait>linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-6.5/ks.cfg<enter>"
+      ]
+    },
+    {
+      "type": "virtualbox-iso",
+      "boot_wait": "10s",
+      "disk_size": 40960,
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "guest_os_type": "RedHat_64",
+      "http_directory": "http",
+      "output_directory": "packer-centos-6.5-x86_64-virtualbox",
+      "shutdown_command": "echo 'vagrant' | eject |  sudo -S /sbin/halt -h -p",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "headless": "false",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "480"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "1"
+        ]
+      ],
+      "iso_checksum": "32c7695b97f7dcd1f59a77a71f64f2957dddf738",
+      "iso_checksum_type": "sha1",
+      "iso_url": "{{user `mirror`}}/6.5/isos/x86_64/CentOS-6.5-x86_64-bin-DVD1.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vm_name": "packer-centos-6.5-x86_64",
+      "boot_command" :
+      [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-6.5/ks.cfg<enter><wait>"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "except": ["qemu"],
+      "output": "builds/{{.Provider}}/gq_centos-6.5-k310-{{user `chef_version`}}-vmware.box",
+      "type": "vagrant"
+    }
+  ],
+  "provisioners": [
+    {
+      "environment_vars": [
+        "CHEF_VERSION={{user `chef_version`}}",
+        "GQ_ENVIRONMENT={{user `gq_environment`}}"
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "scripts/centos/fix-slow-dns.sh",
+        "scripts/centos/update.sh",
+        "scripts/common/sshd.sh",
+        "scripts/common/vagrant.sh",
+        "scripts/centos/kernel.sh",
+        "scripts/centos/kernel-devel.sh",
+        "scripts/common/vmtools.sh",
+        "scripts/common/chef.sh",
+        "scripts/centos/cleanup.sh"
+      ],
+      "type": "shell"
+    },
+    {
+      "environment_vars": [
+        "CHEF_VERSION={{user `chef_version`}}",
+        "GQ_ENVIRONMENT={{user `gq_environment`}}"
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "scripts/common/minimize.sh"
+      ],
+      "except": ["qemu"],
+      "type": "shell"
+    }
+  ]
+}
+

@@ -1,0 +1,60 @@
+{
+    "variables": {
+        "ssh_username": "ubuntu",
+        "image_basename": "ubuntu-14.04-srv",
+        "ISO": "ubuntu-14.04-server-amd64.iso",
+        "ISO_CHECKSUM": "01545fa976c8367b4f0d59169ac4866c",
+        "ISO_CHECKSUM_TYPE": "md5",
+        "ISO_URL": "http://releases.ubuntu.com/14.04/ubuntu-14.04-server-amd64.iso",
+        "disk_size": "10",
+	"preseed_path": "/ubuntu-server-14.04/preseed.cfg",
+	"hostname": "ubuntu"
+    },
+    "builders":[
+        {
+          "vm_name": "{{user `image_basename`}}-{{user `disk_size`}}_{{timestamp}}",
+          "type": "qemu",
+          "accelerator": "kvm",
+          "format": "qcow2",
+          "shutdown_command": "shutdown -P now",
+          "iso_urls": [
+              "../iso/{{user `ISO`}}",
+              "{{user `ISO_URL`}}"
+          ],
+          "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+          "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+          "http_directory": "./http_directory",
+          "http_port_min": 10082,
+          "http_port_max": 10089,
+          "ssh_username": "{{user `ssh_username`}}",
+          "ssh_password": "temp",
+          "ssh_port": 22,
+          "ssh_wait_timeout": "2h",
+          "ssh_host_port_min": 2222,
+          "ssh_host_port_max": 2229,
+          "headless": true,
+          "vnc_port_min": 5900,
+          "vnc_port_max": 5910,
+          "net_device": "virtio-net",
+          "disk_interface": "virtio",
+          "disk_size": "{{user `disk_size`}}000",
+          "boot_command": [
+		"<esc><esc><enter><wait>",
+                "/install/vmlinuz noapic preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `preseed_path`}}",
+                " debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+                "hostname={{user `hostname`}} ",
+                "fb=false debconf/frontend=noninteractive ",
+                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+                "initrd=/install/initrd.gz -- <enter>"
+	  ],
+          "output_directory": "builds/qemu/{{user `image_basename`}}/{{user `image_basename`}}-{{user `disk_size`}}"
+        }
+    ],
+    "provisioners": [
+        {
+          "only": ["qemu"],
+          "type": "shell",
+          "scripts": ["provisions/ubuntu-14.04/post-install.sh"]
+        }
+    ]
+}

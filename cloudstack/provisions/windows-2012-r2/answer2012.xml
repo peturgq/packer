@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <servicing>
+        <package action="configure">
+            <assemblyIdentity name="Microsoft-Windows-Security-SPP-Component-SKU-ServerDatacenterEval-Eval-Package" version="6.3.9600.16384" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="" />
+        </package>
+        <package action="configure">
+            <assemblyIdentity name="Microsoft-Windows-ServerCore-FullServer-Package" version="6.3.9600.16384" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="" />
+        </package>
+        <package action="configure">
+            <assemblyIdentity name="Microsoft-Windows-ServerCore-SKU-Foundation-Package" version="6.3.9600.16384" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="" />
+        </package>
+        <package action="configure">
+            <assemblyIdentity name="Package_for_KB2932046" version="6.3.1.5" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="" />
+        </package>
+        <package action="configure">
+            <assemblyIdentity name="Package_for_KB2937592" version="6.3.1.0" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="" />
+        </package>
+        <package action="configure">
+            <assemblyIdentity name="Package_for_KB2949621" version="6.3.2.0" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="" />
+        </package>
+        <package action="configure">
+            <assemblyIdentity name="Microsoft-Windows-Server-LanguagePack-Package" version="6.3.9600.16384" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="en-US" />
+        </package>
+        <package action="configure">
+            <assemblyIdentity name="Package_for_KB2919355" version="6.3.1.14" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="" />
+        </package>
+        <package action="configure">
+            <assemblyIdentity name="Package_for_KB2919442" version="6.3.1.8" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="" />
+        </package>
+        <package action="configure">
+            <assemblyIdentity name="Package_for_KB2937220" version="6.3.1.0" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="" />
+        </package>
+        <package action="configure">
+            <assemblyIdentity name="Package_for_KB2938772" version="6.3.1.0" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="" />
+        </package>
+        <package action="configure">
+            <assemblyIdentity name="Package_for_KB2939471" version="6.3.1.0" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="" />
+        </package>
+    </servicing>
+    <cpi:offlineImage cpi:source="wim:c:/users/administrator/desktop/win%202012/install.wim#Windows Server 2012 R2 SERVERDATACENTER" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+</unattend>

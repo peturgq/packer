@@ -1,0 +1,65 @@
+{
+    "variables": {
+        "ssh_username": "root",
+        "image_basename": "freebsd10",
+        "ISO": "FreeBSD-10.0-RELEASE-amd64-disc1.iso",
+        "ISO_CHECKSUM": "fd25619fa0d69c29bea8347b1070ac75",
+        "ISO_CHECKSUM_TYPE": "md5",
+        "ISO_URL": "http://ftp.freebsd.org/pub/FreeBSD/releases/amd64/amd64/ISO-IMAGES/10.0/FreeBSD-10.0-RELEASE-amd64-disc1.iso",
+        "disk_size": "10",
+	"hostname": "freebsd"
+    },
+    "builders":[
+        {
+          "vm_name": "{{user `image_basename`}}-{{user `disk_size`}}_{{timestamp}}",
+          "type": "qemu",
+          "accelerator": "kvm",
+          "format": "qcow2",
+          "shutdown_command": "halt -p",
+          "iso_urls": [
+              "../iso/{{user `ISO`}}",
+              "{{user `ISO_URL`}}"
+          ],
+          "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+          "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+          "http_directory": "./http_directory",
+          "http_port_min": 10082,
+          "http_port_max": 10089,
+          "ssh_username": "{{user `ssh_username`}}",
+          "ssh_password": "temp",
+          "ssh_port": 22,
+          "ssh_wait_timeout": "2h",
+          "ssh_host_port_min": 2222,
+          "ssh_host_port_max": 2229,
+          "headless": true,
+          "vnc_port_min": 5900,
+          "vnc_port_max": 5910,
+          "net_device": "virtio-net",
+          "disk_interface": "virtio",
+          "disk_size": "{{user `disk_size`}}000",
+          "boot_command": [
+		"<esc><wait>",
+       		"load geom_mbr<wait>",
+        	"<enter><wait>",
+        	"load zfs<wait>",
+        	"<enter><wait>",
+        	"boot -s<wait>",
+        	"<enter><wait>",
+        	"<wait10><wait10>",
+        	"/bin/sh<enter><wait>",
+        	"mdmfs -s 100m md1 /tmp<enter><wait>",
+        	"mdmfs -s 100m md2 /mnt<enter><wait>",
+        	"dhclient -l /tmp/dhclient.lease.vtnet0 vtnet0<enter><wait>",
+        	"fetch -o /tmp/install.sh http://{{ .HTTPIP }}:{{ .HTTPPort }}/freebsd10/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh {{ .Name }}<enter><wait>"
+	  ],
+          "output_directory": "builds/qemu/{{user `image_basename`}}/{{user `image_basename`}}-{{user `disk_size`}}"
+        }
+    ],
+    "provisioners": [
+        {
+          "only": ["qemu"],
+          "type": "shell",
+          "scripts": ["provisions/freebsd10/post-install.sh"]
+        }
+    ]
+}

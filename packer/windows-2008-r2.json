@@ -1,0 +1,57 @@
+{
+  "builders":[
+    {
+      "type": "vmware-iso",
+      "guest_os_type": "windows7srv-64",
+      "tools_upload_flavor": "windows",
+      "shutdown_command": "shutdown /s /t 100 /f /d p:4:1 /c \"Packer Shutdown\" & cmd /c c:/Windows/Temp/cleanup.bat",
+      "boot_wait": "2m",
+      "iso_urls": [
+          "../iso/{{user `ISO`}}",
+          "http://care.dlservice.microsoft.com/dl/download/7/5/E/75EC4E54-5B02-42D6-8879-D8D3A25FBEF7/7601.17514.101119-1850_x64fre_server_eval_en-us-GRMSXEVAL_EN_DVD.iso"
+      ],
+      "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+      "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+      "skip_compaction": true,
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "administrator",
+      "ssh_wait_timeout": "2h",
+      "vm_name": "{{user `image_basename`}}_{{timestamp}}",
+      "disk_size": 163840,
+      "headless": false,
+      "vnc_port_min": 5900,
+      "vnc_port_max": 5910,
+      "floppy_files": [
+          "./scripts/windows-2008-r2/AutoUnattend.xml",
+          "./scripts/windows/win-update.ps1",
+          "./scripts/windows/openssh.ps1",
+          "./scripts/windows/dotNet4.bat"
+      ],
+      "output_directory": "../builds/vmware/customer-{{user `image_basename`}}"
+    }
+  ],
+  "variables": {
+      "ssh_username": "Administrator",
+      "image_basename": "windows-2008-r2-datacenter",
+      "ISO": "7601.17514.101119-1850_x64fre_server_eval_en-us-GRMSXEVAL_EN_DVD.iso",
+      "ISO_CHECKSUM_TYPE": "md5",
+      "ISO_CHECKSUM": "4263be2cf3c59177c45085c0a7bc6ca5"
+  },
+  "provisioners": [
+      {
+          "type": "shell",
+          "binary": true,
+          "remote_path": "/tmp/script.bat",
+          "execute_command": "{{.Vars}} cmd /c C:/Windows/Temp/script.bat",
+          "scripts": [
+              "./scripts/windows/vm-tools.bat",
+              "./scripts/windows/CloudIM.bat"
+          ]
+      },
+      {
+          "type": "file",
+          "source": "./scripts/windows/cleanup.bat",
+          "destination": "/tmp/cleanup.bat"
+      }
+  ]
+}

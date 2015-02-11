@@ -1,0 +1,67 @@
+{
+  "variables": {
+    "image_basename": "gq_debian-7.7-bp",
+    "iso": "debian-7.7.0-amd64-DVD-1.iso",
+    "iso_url": "http://debian.simnet.is/debian-cd/7.7.0/amd64/iso-dvd/debian-7.7.0-amd64-DVD-1.iso",
+    "iso_checksum": "c3be43c8af62c3a34fd7dd1b1266e8e66f8f11b7",
+    "iso_checksum_type": "sha1",
+    "disk_size": "65"
+  },
+  "builders": [
+    {
+      "type": "qemu",
+      "output_directory": "builds/qemu/{{user `image_basename`}}",
+      "shutdown_command": "sudo -S shutdown -h now",
+      "disk_size": "{{user `disk_size`}}000",
+      "format": "qcow2",
+      "accelerator": "kvm",
+      "http_directory": "http",
+      "http_port_min": 10082,
+      "http_port_max": 10089,
+      "ssh_host_port_min": 2222,
+      "ssh_host_port_max": 2229,
+      "ssh_username": "root",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "headless": true,
+      "vnc_port_min": 5900,
+      "vnc_port_max": 5999,
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_urls": [
+        "../iso/{{user `iso`}}",
+        "{{user `iso_url`}}"
+      ],
+      "vm_name": "{{user `image_basename`}}",
+      "boot_command": [
+        "<esc><wait>",
+        "install",
+        " auto",
+        " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/debian-7.7/ks-old.cfg",
+        " debian-installer=en_US",
+        " locale=en_US",
+        " keymap=us",
+        " netcfg/get_hostname=gq-box",
+        " netcfg/get_domain=vm ",
+        "<enter>"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "execute_command": "{{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "scripts/debian/update.sh",
+        "scripts/common/sshd.sh",
+        "scripts/debian/networking.sh",
+        "scripts/common/sudoers.sh",
+        "scripts/common/vagrant.sh",
+        "scripts/debian/cleanup.sh"
+      ],
+      "type": "shell"
+    }
+  ]
+}

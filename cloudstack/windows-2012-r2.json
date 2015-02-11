@@ -1,0 +1,52 @@
+{
+  "variables": {
+      "ssh_username": "Administrator",
+      "image_basename": "windows-2012-r2-datacenter",
+      "ISO": "9600.16384.WINBLUE_RTM.130821-1623_X64FRE_SERVER_EVAL_EN-US-IRM_SSS_X64FREE_EN-US_DV5.ISO",
+      "ISO_CHECKSUM_TYPE": "md5",
+      "ISO_CHECKSUM": "458ff91f8abc21b75cb544744bf92e6a",
+      "mirror": "http://download.microsoft.com/download/6/2/A/62A76ABB-9990-4EFC-A4FE-C7D698DAEB96",
+      "size": "40960"
+  },
+  "builders":[
+    {
+      "vm_name": "{{user `image_basename`}}",
+      "type": "qemu",
+      "accelerator": "kvm",
+      "format": "qcow2",
+      "shutdown_command": "cmd.exe /C A:\\cleanup.bat",
+      "iso_urls": [
+          "../iso/{{user `ISO`}}",
+          "{{user `mirror`}}/{{user `ISO`}}"
+      ],
+      "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+      "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "Administrat0r",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "48h",
+      "ssh_host_port_min": 2222,
+      "ssh_host_port_max": 2229,
+      "headless": true,
+      "vnc_port_min": 5900,
+      "vnc_port_max": 5910,
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "disk_size": "{{user `size`}}",
+      "floppy_files": [
+          "./provisions/windows-2012-r2/Autounattend2.xml",
+	  "./provisions/windows-2012-r2/answer2012.xml",
+	  "./provisions/windows-2012-r2/driver/*",
+	  "./provisions/windows-2012-r2/scripts/win-updates.ps1",
+          "./provisions/windows-2012-r2/scripts/cleanup.bat",
+          "./provisions/windows-2012-r2/scripts/dotNet4.bat",
+	  "./provisions/windows-2012-r2/scripts/microsoft-updates.bat",
+	  "./provisions/windows-2012-r2/scripts/openssh.ps1",
+          "./provisions/windows-2012-r2/scripts/config.bat",
+          "./provisions/windows-2012-r2/scripts/enable-rdp.bat",
+          "./provisions/windows-2012-r2/scripts/CloudIM.ps1"
+      ],
+     "output_directory": "builds/qemu/{{user `image_basename`}}"
+    }
+  ]
+}

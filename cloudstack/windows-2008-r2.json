@@ -1,0 +1,93 @@
+{
+  "variables": {
+      "ssh_username": "Administrator",
+      "image_basename": "windows-2008-r2-datacenter",
+      "ISO": "7601.17514.101119-1850_x64fre_server_eval_en-us-GRMSXEVAL_EN_DVD.iso",
+      "ISO_CHECKSUM_TYPE": "md5",
+      "ISO_CHECKSUM": "4263be2cf3c59177c45085c0a7bc6ca5",
+      "mirror": "http://care.dlservice.microsoft.com/dl/download/7/5/E/75EC4E54-5B02-42D6-8879-D8D3A25FBEF7"
+  },
+  "builders":[
+    {
+      "vm_name": "{{user `image_basename`}}",
+      "type": "qemu",
+      "accelerator": "kvm",
+      "format": "qcow2",
+      "shutdown_command": "cmd.exe /C A:\\cleanup.bat",
+      "iso_urls": [
+          "../iso/{{user `ISO`}}",
+          "{{user `mirror`}}/7601.17514.101119-1850_x64fre_server_eval_en-us-GRMSXEVAL_EN_DVD.iso"
+      ],
+      "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+      "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "password",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "48h",
+      "ssh_host_port_min": 2222,
+      "ssh_host_port_max": 2229,
+      "headless": true,
+      "vnc_port_min": 5900,
+      "vnc_port_max": 5910,
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "disk_size": 40960,
+      "floppy_files": [
+          "./provisions/windows-2008-r2/Autounattend.xml",
+	  "./provisions/windows-2008-r2/answer2008-2.xml",
+	  "./provisions/windows-2008-r2/driver/*",
+	  "./provisions/windows/win-updates.ps1",
+          "./provisions/windows/cleanup.bat",
+          "./provisions/windows/dotNet4.bat",
+	  "./provisions/windows/microsoft-updates.bat",
+	  "./provisions/windows/openssh.ps1",
+          "./provisions/windows/enable-rdp.bat",
+          "./provisions/windows/CloudIM.ps1"
+      ],
+     "output_directory": "builds/vmware/{{user `image_basename`}}"
+    },
+    {
+      "type": "vmware-iso",
+      "guest_os_type": "windows7srv-64",
+      "shutdown_command": "cmd.exe /C A:\\cleanup.bat",
+      "boot_wait": "2m",
+      "iso_urls": [
+          "../iso/{{user `ISO`}}",
+          "http://care.dlservice.microsoft.com/dl/download/7/5/E/75EC4E54-5B02-42D6-8879-D8D3A25FBEF7/7601.17514.101119-1850_x64fre_server_eval_en-us-GRMSXEVAL_EN_DVD.iso"
+      ],
+      "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+      "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+      "skip_compaction": true,
+      "ssh_username": "Administrator",
+      "ssh_password": "password",
+      "ssh_wait_timeout": "40h",
+      "vm_name": "{{user `image_basename`}}_{{timestamp}}",
+      "disk_size": 66560,
+      "headless": false,
+      "vnc_port_min": 5900,
+      "vnc_port_max": 5910,
+      "floppy_files": [
+          "./provisions/windows-2008-r2/Autounattend.xml",
+          "./provisions/windows-2008-r2/answer2008-2.xml",
+          "./provisions/windows/openssh.ps1",
+          "./provisions/windows/cleanup.bat"
+      ],
+      "output_directory": "builds/vmware/{{user `image_basename`}}"
+    }
+  ],
+  "provisioners": [
+      {
+          "type": "shell",
+          "remote_path": "/cygdrive/c/Windows/Temp/script.bat",
+          "execute_command": "{{.Vars}} cmd /c C:/Windows/Temp/script.bat",
+          "scripts": [
+		"./provisions/windows/vm-tools.bat",
+		"./provisions/windows/microsoft-updates.bat",
+		"./provisions/windows/CloudIM.bat",
+		"./provisions/windows/config.bat"
+          ],
+          "only": ["vmware-iso"]
+      }
+
+  ]
+}

@@ -1,0 +1,4 @@
+#!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export PACKER_LOG=info
+#export PACKER_LOG_PATH=${DIR}/packer.log

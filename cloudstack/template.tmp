@@ -1,0 +1,39 @@
+{
+    "variables": {
+        "ssh_username": "root",
+        "image_basename": "centos-6.5-srv",
+        "ISO": "CentOS-6.5-x86_64-bin-DVD1.iso",
+        "ISO_CHECKSUM": "md5",
+        "ISO_CHECKSUM_TYPE": "83221db52687c7b857e65bfe60787838"
+    },
+    "builders":[
+        {   "type": "vmware-iso",
+            "boot_command": [
+                "<esc>",
+                "<wait>linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/greenqloud.cfg<enter>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 163840,
+            "guest_os_type": "linux",
+            "http_directory": "./http_directory",
+            "iso_url": "./iso/{{user `ISO`}}",
+            "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+            "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+            "skip_compaction": true,
+            "ssh_password": "temp",
+            "ssh_username": "{{user `ssh_username`}}",
+            "ssh_wait_timeout": "40m",
+            "shutdown_command": "shutdown -P now",
+            "tools_upload_flavor": "linux",
+            "vm_name": "{{user `image_basename`}}_{{timestamp}}",
+            "vmx_data": {
+              "ethernet0.virtualdev": "vmxnet3"
+            }
+        }
+    ],
+    "provisioners": [
+        {  "type": "shell", "scripts": ["provisions/get-started.sh"]},
+        {  "type": "shell", "scripts": ["provisions/greenqloud.sh"]},
+        {  "type": "shell", "scripts": ["provisions/all-done.sh"]}
+    ]
+}

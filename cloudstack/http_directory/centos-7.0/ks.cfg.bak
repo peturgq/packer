@@ -1,0 +1,106 @@
+# Greenqloud kickstarter file for CentOS 6.5
+# For information about the various kickstart commands
+# See: http://www.centos.org/docs/5/html/Installation_Guide-en-US/s1-kickstart2-options.html
+
+# Perform the kickstart installation in text mode.
+# Kickstart installations are performed in graphical mode by default.
+text
+
+# X is not configured on the installed system.
+skipx
+
+# Install OS instead of upgrade
+install
+
+# Repository information
+url --url http://centos.t.is/centos/7/os/x86_64/
+repo --name=updates --baseurl=http://centos.t.is/centos/7/updates/x86_64/
+repo --name="EPEL" --baseurl=http://download.fedoraproject.org/pub/epel/7/x86_64
+
+# System language
+lang en_US.UTF-8
+
+# System keyboard
+keyboard us
+
+# Root password as temp
+rootpw temp
+
+# Disable firewall
+firewall --disabled
+
+# Sets up authentication options for the system, uses shadow passwords
+authconfig --enableshadow --passalgo=sha512
+
+# Disable selinux
+selinux --disabled
+
+# Set timezone GMT
+timezone GMT
+bootloader --location=mbr
+
+# Any invalid partition tables found on disks are initialized.
+zerombr
+# Removes partitions from the system, prior to creation of new partitions.
+clearpart --all --initlabel
+
+# Disk partitioning information
+part /boot --fstype ext4 --fsoptions="noatime" --size=200
+part pv.1 --size 1 --grow
+volgroup vg0 pv.1
+logvol / --fstype ext4 --fsoptions="noatime" --name=root --vgname=vg0 --size=1 --grow
+logvol swap --fstype swap --name=swap --vgname=vg0 --size 512
+
+services --enabled=network,ntpd,ntpdate
+
+# Poweroff after installation
+poweroff
+
+%packages --nobase
+epel-release
+openssh-clients
+openssh-server
+yum
+at
+acpid
+vixie-cron
+cronie-noanacron
+crontabs
+logrotate
+ntp
+ntpdate
+tmpwatch
+rsync
+sendmail
+mailx
+which
+wget
+-postfix
+-prelink
+-selinux-policy-targeted
+%end
+
+%post
+
+  # Change to a vt to see progress
+
+  exec < /dev/tty3 > /dev/tty3
+  chvt 3
+
+  # redirect output to ks-post.log including stdout and stderr
+  (
+    #######################################################
+    # Turn off un-needed services
+    #######################################################
+    chkconfig sendmail off
+    chkconfig vbox-add-x11 off
+    chkconfig smartd off
+    chkconfig ntpd off
+    chkconfig cupsd off
+
+  ) 2>&1 | /usr/bin/tee /root/ks-post.log
+
+  # switch back to gui
+  chvt 7
+
+%end

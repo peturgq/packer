@@ -1,0 +1,58 @@
+{
+    "variables": {
+        "ssh_username": "root",
+        "image_basename": "suse-13-server",
+        "ISO": "openSUSE-13.1-DVD-x86_64.iso",
+        "ISO_CHECKSUM": "1096c9c67fc8a67a94a32d04a15e909d",
+        "ISO_CHECKSUM_TYPE": "md5",
+        "ISO_URL": "http://ftp.heanet.ie/mirrors/ftp.opensuse.org/opensuse/distribution/13.1/iso/openSUSE-13.1-DVD-x86_64.iso",
+        "disk_size": "10",
+	"hostname": "suse"
+    },
+    "builders":[
+        {
+          "vm_name": "{{user `image_basename`}}-{{user `disk_size`}}_{{timestamp}}",
+          "type": "qemu",
+          "accelerator": "kvm",
+          "format": "qcow2",
+          "shutdown_command": "shutdown -h now",
+          "iso_urls": [
+              "../iso/{{user `ISO`}}",
+              "{{user `ISO_URL`}}"
+          ],
+          "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+          "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+          "http_directory": "./http_directory",
+          "http_port_min": 10082,
+          "http_port_max": 10089,
+          "ssh_username": "{{user `ssh_username`}}",
+          "ssh_password": "temp",
+          "ssh_port": 22,
+          "ssh_wait_timeout": "2h",
+          "ssh_host_port_min": 2222,
+          "ssh_host_port_max": 2229,
+          "headless": true,
+          "vnc_port_min": 5900,
+          "vnc_port_max": 5910,
+          "net_device": "virtio-net",
+          "disk_interface": "virtio",
+          "disk_size": "{{user `disk_size`}}000",
+          "boot_command": [
+	  	"<esc><enter><wait>",
+         	"linux netdevice=eth0 netsetup=dhcp",
+         	" install=cd:/",
+         	" lang=en_US autoyast=http://{{ .HTTPIP }}:{{ .HTTPPort }}/openSUSE-13.1-server/autoyast.xml",
+         	" textmode=1",
+         	"<enter>"
+	  ],
+          "output_directory": "builds/qemu/{{user `image_basename`}}/{{user `image_basename`}}-{{user `disk_size`}}"
+        }
+    ],
+    "provisioners": [
+        {
+          "only": ["qemu"],
+          "type": "shell",
+          "scripts": ["provisions/opensuse13/post-install.sh"]
+        }
+    ]
+}

@@ -1,0 +1,78 @@
+{
+    "variables": {
+        "ssh_username": "root",
+        "image_basename": "scientific",
+        "ISO": "SL-65-x86_64-2014-01-27-Everything-DVD1.iso",
+        "ISO_CHECKSUM": "09bbe3dc354181568973ca352665d54a915594d5df275aca191dbf1d7f13b934",
+        "ISO_CHECKSUM_TYPE": "sha256",
+        "ISO_URL": "http://ftp1.scientificlinux.org/linux/scientific/6x/x86_64/iso/SL-65-x86_64-2014-01-27-Install-DVD.iso",
+        "disk_size": "10",
+        "kickstart_path": "/centos-6.5/ks.cfg"
+    },
+    "builders":[
+        {
+          "vm_name": "{{user `image_basename`}}-{{user `disk_size`}}_{{timestamp}}",
+          "type": "qemu",
+          "accelerator": "kvm",
+          "format": "qcow2",
+          "shutdown_command": "shutdown -P now",
+          "iso_urls": [
+              "../iso/{{user `ISO`}}",
+              "{{user `ISO_URL`}}"
+          ],
+          "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+          "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+          "http_directory": "http_directory",
+          "http_port_min": 10082,
+          "http_port_max": 10089,
+          "ssh_username": "{{user `ssh_username`}}",
+          "ssh_password": "temp",
+          "ssh_port": 22,
+          "ssh_wait_timeout": "2h",
+          "ssh_host_port_min": 2222,
+          "ssh_host_port_max": 2229,
+          "headless": true,
+          "vnc_port_min": 5900,
+          "vnc_port_max": 5910,
+          "net_device": "virtio-net",
+          "disk_interface": "virtio",
+          "disk_size": "{{user `disk_size`}}000",
+          "boot_command": [
+              "<esc>",
+              "<wait>linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `kickstart_path`}}<enter>"
+          ],
+          "output_directory": "builds/qemu/{{user `image_basename`}}/{{user `image_basename`}}-{{user `disk_size`}}"
+        },
+        {
+            "type": "vmware-iso",
+            "boot_command": [
+                "<esc>",
+                "<wait>linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/greenqloud.cfg<enter>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": "{{user `disk_size`}}",
+            "guest_os_type": "linux",
+            "http_directory": "./http_directory",
+            "iso_urls": [
+                "../iso/{{user `ISO`}}",
+                "{{user `ISO_URL`}}"
+            ],
+            "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+            "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+            "skip_compaction": true,
+            "ssh_password": "temp",
+            "ssh_username": "{{user `ssh_username`}}",
+            "ssh_wait_timeout": "40m",
+            "shutdown_command": "shutdown -P now",
+            "tools_upload_flavor": "linux",
+            "vm_name": "{{user `image_basename`}}_{{timestamp}}",
+            "vmx_data": {
+              "ethernet0.virtualdev": "vmxnet3"
+            },
+            "output_directory": "builds/vmware/{{user `image_basename`}}"
+        }
+    ],
+    "provisioners": [
+        {  "type": "shell", "scripts": ["provisions/scientific/post-install.sh"]}
+    ]
+}
