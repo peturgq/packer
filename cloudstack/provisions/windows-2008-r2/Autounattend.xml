@@ -38,8 +38,8 @@
             </DiskConfiguration>
             <UserData>
                 <AcceptEula>true</AcceptEula>
-                <FullName>Advania Administrator</FullName>
-                <Organization>Advania</Organization>
+                <FullName>Organization Administrator</FullName>
+                <Organization>Organization</Organization>
                 <!-- Product Key from http://technet.microsoft.com/en-us/library/jj612867.aspx -->
                 <ProductKey>
                     <!-- Do not uncomment the Key element if you are using trial ISOs -->
