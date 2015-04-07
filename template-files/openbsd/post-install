@@ -1,0 +1,36 @@
+echo "Starting to download needed files from xcat..."
+
+wget http://192.168.3.253/tmpl/openbsd/gq-create-ssh-keys -O /etc/rc.d/gq-create-ssh-keys
+wget http://192.168.3.253/tmpl/openbsd/gq-get-passwd -O /etc/rc.d/gq-get-passwd
+wget http://192.168.3.253/tmpl/openbsd/gq-get-ssh-keys -O /etc/rc.d/gq-get-ssh-keys
+wget http://192.168.3.253/tmpl/openbsd/gq-get-userdata -O /etc/rc.d/gq-get-userdata
+wget http://192.168.3.253/tmpl/openbsd/gq-set-hostname -O /etc/rc.d/gq-set-hostname
+
+#Change permissions
+chmod +x /etc/rc.d/gq-*
+
+#Remove the ssh keys
+rm /etc/ssh/ssh_host*
+
+#Remove logs and temp
+rm /var/log/*
+rm /tmp/*
+rm -R /tmp/*
+
+#Add the scripts to be run on boot
+echo "/etc/rc.d/gq-create-ssh-keys" >> /etc/rc.securelevel
+echo "/etc/rc.d/gq-get-passwd" >> /etc/rc.securelevel
+echo "/etc/rc.d/gq-get-ssh-keys" >> /etc/rc.securelevel
+echo "/etc/rc.d/gq-get-userdata" >> /etc/rc.securelevel
+echo "/etc/rc.d/gq-set-hostname" >> /etc/rc.securelevel
+
+#Modify the .profile to add useful stuff
+echo "HOSTNAME=$(cat /etc/myname)" >> /root/.profile
+echo "export HOSTNAME" >> /root/.profile
+echo "PS1=\"${HOSTNAME}:\${PWD##*/} \$ \"" >> /root/.profile
+
+rm /etc/hostname
+rm /etc/myname
+
+touch /etc/myname
+touch /etc/hostname

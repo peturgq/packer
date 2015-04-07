@@ -1,0 +1,25 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          gq-create-ssh-keys
+# Required-Start:    $local_fs $network $syslog
+# Required-Stop:     $local_fs $network $syslog
+# Default-Start:     2
+# Default-Stop:      
+# Short-Description: Create missing SSH host keys
+# Description:       Create missing SSH host keys
+### END INIT INFO
+
+# Author: GreenQloud <greenqloud@greenqloud.com>
+#
+
+ssh_key_gen=/usr/bin/ssh-keygen
+ssh_conf_dir=/etc/ssh
+ssh_key_algorithms="dsa rsa"
+
+for algorithm in $ssh_key_algorithms; do
+    key_file=$(printf "%s/ssh_host_%s_key\n" $ssh_conf_dir $algorithm)
+    if [ ! -e $key_file ]; then
+        $ssh_key_gen -q -N "" -t $algorithm -f $key_file
+    fi
+done
+

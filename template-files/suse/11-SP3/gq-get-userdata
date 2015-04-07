@@ -1,0 +1,45 @@
+#!/bin/bash
+
+#
+# GQ: Get user data
+#
+
+# Modify this line to specify filename
+file=/tmp/userdata
+
+# Get DomR Ip
+for x in $(seq 1 5); do
+    DOMR_IP=$(netstat -nr | grep UG | awk '{print $2}')
+    if [ -n "$DOMR_IP" ]; then
+        break;
+    fi
+    if [ $x -eq 5 ]; then
+        echo "DomR IP address not found. Exiting."
+        exit 1
+    fi
+    sleep 2
+done
+
+# Get userdata
+userdata=$(wget -t 3 -T 20 -O - http://$DOMR_IP/latest/user-data 2>/dev/null)
+
+if [ $? -ne 0 ]; then
+    echo "No userdata found."
+    exit 1
+fi
+
+echo "$userdata" > $file
+head -1 $file|egrep '^#!' 2>&1 > /dev/null
+
+if [ $? -eq 0 ]; then
+    chmod 700 $file
+    $file
+    if [ $? -eq 0 ]; then
+        rm $file
+        rm /etc/rc.d/gq-get-userdata
+        rm /etc/rc.d/rc3.d/S50gq-get-userdata
+        rm /etc/rc.d/rc5.d/S50gq-get-userdata
+    fi
+fi
+
+exit 0

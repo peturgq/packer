@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#
+# GQ: Get SSH keys for user
+#
+
+# Modify this line to specify the user (default is root)
+user=root
+
+# Get DomR Ip
+i=1
+for i in `seq 1 5`; do
+    DOMR_IP=$(netstat -nr | grep UG | awk '{print $2}')
+    echo "DOMR_IP: $DOMR_IP"
+    if [ -n "$DOMR_IP" ]; then
+        break;
+    fi
+    if [ $i -eq 5 ]; then
+        echo "DomR IP address not found. Exiting."
+        exit 1
+    fi
+    echo "Sleep and try again..."
+    sleep 2
+done
+
+# Get ssh public key
+homedir='/root'
+sshdir=$homedir/.ssh
+authorized=$sshdir/authorized_keys
+publickey=$(wget -t 3 -T 20 -O - http://$DOMR_IP/latest/public-keys 2>/dev/null)
+
+if [ $? -ne 0 ]; then
+    echo "Error receiving SSH public key. Exiting."
+    exit 1
+fi
+
+if [ ! -e $sshdir ]; then
+    mkdir $sshdir
+fi
+
+if [ ! -e $authorized ]; then
+    touch $authorized
+fi
+
+otherkeys=$(cat $authorized|grep -v "$publickey")
+echo "$otherkeys" > $authorized
+echo "$publickey" >> $authorized
+
+exit 0

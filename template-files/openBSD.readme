@@ -1,0 +1,29 @@
+pkg_add wget
+pkg_add ee
+
+#Uncomment a line from the ssh daemon config file
+#Look for "PermitRootLogin yes" and uncomment it.
+ee /etc/ssh/sshd_config
+
+#Download the stuff from xcat
+wget http://192.168.3.253/tmpl/openbsd/download
+sh download
+
+#Change permissions
+chmod +x /etc/rc.d/gq-*
+
+pkg_add gcc
+
+#Remove the ssh keys
+rm /etc/ssh/ssh_host*
+
+#Remove logs and temp
+rm /var/log/*
+rm /tmp/*
+rm -R /tmp/*
+
+#Add the scripts to be run on boot
+echo "/etc/rc.d/gq-create-ssh-keys" >> /etc/rc.securelevel
+echo "/etc/rc.d/gq-get-passwd" >> /etc/rc.securelevel
+echo "/etc/rc.d/gq-get-ssh-keys" >> /etc/rc.securelevel
+echo "/etc/rc.d/gq-get-userdata" >> /etc/rc.securelevel

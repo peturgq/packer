@@ -1,0 +1,40 @@
+#!/bin/sh
+
+#
+# GQ: Get user data
+#
+
+# Modify this line to specify filename
+file=/tmp/userdata
+
+# Get DomR Ip
+for x in $(seq 1 5); do
+    DOMR_IP=$(pr_routes |awk '/0.0.0.0/ {print $4}')
+    if [ -n "$DOMR_IP" ]; then
+        break;
+    fi
+    if [ $x -eq 5 ]; then
+        echo "DomR IP address not found. Exiting."
+        exit 1
+    fi
+    sleep 2
+done
+
+# Get userdata 
+userdata=$(curl --retry 3 --retry-delay 20 -o - http://$DOMR_IP/latest/user-data 2>/dev/null)
+
+if [ $? -ne 0 ]; then
+    echo "No userdata found."
+    exit 1
+fi
+
+echo "$userdata" > $file
+head -1 $file|egrep '^#!' 2>&1 > /dev/null
+
+if [ $? -eq 0 ]; then
+    chmod 700 $file
+    $file
+fi
+
+exit 0
+

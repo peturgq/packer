@@ -1,0 +1,95 @@
+## Select expert install on install to prevent an extra user
+apt-get update 
+apt-get upgrade
+apt-get install vim
+apt-get install acpid
+echo "acpiphp" >> /etc/modules
+echo "sh -c 'setterm -blank 0 -powersave off -powerdown 0 < /dev/console > /dev/console 2>&1'" >> /etc/rc.local
+
+
+### Copy these files from CloudStack git repository 
+###
+### https://github.com/greenqloud/CloudStack/tree/master/templates/vm-files/debian/6.0.3/etc/init.d
+###
+
+#wget http://s.greenqloud.com/template-scripts/ubuntu/11.04/dhclient-exit-hooks.d/hostname -O /etc/dhcp/dhclient-exit-hooks.d/hostname
+#wget http://s.greenqloud.com/template-scripts/centos/6.0/init.d/gq-create-ssh-keys -O /etc/init.d/gq-create-ssh-keys
+#wget http://s.greenqloud.com/template-scripts/centos/6.0/init.d/gq-get-passwd -O /etc/init.d/gq-get-passwd
+#wget http://s.greenqloud.com/template-scripts/centos/6.0/init.d/gq-get-ssh-keys -O /etc/init.d/gq-get-ssh-keys
+#wget http://s.greenqloud.com/template-scripts/centos/6.0/init.d/gq-get-userdata -O /etc/init.d/gq-get-userdata
+
+chmod 755 /etc/init.d/gq-create-ssh-keys
+chmod 755 /etc/init.d/gq-get-passwd
+chmod 755 /etc/init.d/gq-get-ssh-keys
+chmod 755 /etc/init.d/gq-get-userdata
+
+rm /etc/ssh/ssh_host_dsa_key /etc/ssh/ssh_host_dsa_key.pub
+rm /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key.pub
+rm /var/cache/apt/*.bin
+
+ln -s /etc/init.d/gq-create-ssh-keys /etc/rc2.d/S18gq-create-ssh-keys
+ln -s /etc/init.d/gq-get-passwd /etc/rc2.d/S18gq-get-passwd
+ln -s /etc/init.d/gq-get-ssh-keys /etc/rc2.d/S18gq-get-ssh-keys 
+ln -s /etc/init.d/gq-get-userdata /etc/rc2.d/S18gq-get-userdata
+
+sed -e '1 s/$/ gq-create-ssh-keys gq-get-passwd gq-get-ssh-keys gq-get-userdata/' -i /etc/init.d/.depend.start
+
+echo "gq-create-ssh-keys: rsyslog" >> /etc/init.d/.depend.start
+echo "gq-get-passwd: rsyslog" >> /etc/init.d/.depend.start
+echo "gq-get-ssh-keys : rsyslog" >> /etc/init.d/.depend.start
+echo "gq-get-userdata: rsyslog" >> /etc/init.d/.depend.start
+
+# in guestfish, guestfish -i -a deb.qcow2:
+rm /etc/udev/rules.d/70-persistent-cd.rules 
+rm /root/.bash_history
+rm /root/.lesshst
+rm /root/.aptitude/config 
+rmdir /root/.aptitude
+rm /root/.bash_history 
+rm /root/.viminfo 
+
+# Manually 
+rm /var/log/dmesg.*
+
+write /var/log/alternatives.log ""
+write /var/log/apt/history.log ""
+write /var/log/apt/term.log ""
+write /var/log/aptitude ""
+write /var/log/auth.log ""
+write /var/log/boot ""
+write /var/log/btmp ""
+write /var/log/daemon.log ""
+write /var/log/debug ""
+write /var/log/dmesg ""
+write /var/log/dpkg.log ""
+write /var/log/exim4/mainlog ""
+write /var/log/faillog ""
+write /var/log/fsck/check ""
+write /var/log/fsck/checkfs ""
+write /var/log/fsck/checkroot ""
+write /var/log/fsck/news ""
+write /var/log/installer/cdebconf/questions.dat ""
+write /var/log/installer/cdebconf/templates.dat ""
+write /var/log/installer/hardware-summary ""
+write /var/log/installer/lsb-release ""
+write /var/log/installer/partman ""
+write /var/log/installer/status ""
+write /var/log/installer/syslog ""
+write /var/log/kern.log ""
+write /var/log/lastlog ""
+write /var/log/lpr.log ""
+write /var/log/mail.err ""
+write /var/log/mail.info ""
+write /var/log/mail.log ""
+write /var/log/mail.warn ""
+write /var/log/messages ""
+write /var/log/pycentral.log ""
+write /var/log/syslog ""
+write /var/log/user.log ""
+write /var/log/wtmp ""
+
+rm /etc/ssh/ssh_host_dsa_key 
+rm /etc/ssh/ssh_host_dsa_key.pub
+rm /etc/ssh/ssh_host_rsa_key 
+rm /etc/ssh/ssh_host_rsa_key.pub
+

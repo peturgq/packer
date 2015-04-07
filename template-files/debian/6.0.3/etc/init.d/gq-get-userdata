@@ -1,0 +1,48 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          gq-get-userdata
+# Required-Start:    $local_fs $network $syslog
+# Required-Stop:     $local_fs $network $syslog
+# Default-Start:     2
+# Default-Stop:      
+# Short-Description: Get userdata
+# Description:       Get userdata
+### END INIT INFO
+
+# Author: GreenQloud <greenqloud@greenqloud.com>
+#
+
+# Modify this line to specify filename
+file=/tmp/userdata
+
+# Get DomR Ip
+for x in $(seq 1 5); do
+    DOMR_IP=$(route -n|awk '/^0.0.0.0/ {print $2}')
+    if [ -n "$DOMR_IP" ]; then
+        break;
+    fi
+    if [ $x -eq 5 ]; then
+        echo "DomR IP address not found. Exiting."
+        exit 1
+    fi
+    sleep 2
+done
+
+# Get userdata 
+userdata=$(wget -t 3 -T 20 -O - http://$DOMR_IP/latest/user-data 2>/dev/null)
+
+if [ $? -ne 0 ]; then
+    # No userdata found
+    exit 0
+fi
+
+echo "$userdata" > $file
+head -1 $file|egrep '^#!' 2>&1 > /dev/null
+
+if [ $? -eq 0 ]; then
+    chmod 700 $file
+    $file
+fi
+
+exit 0
+

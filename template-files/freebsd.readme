@@ -1,0 +1,65 @@
+#Update the ports and the software pre-installed
+
+portsnap fetch update
+portsnap extract
+
+#No need to disable the screensaver, the xserver is not even installed.
+
+#Install wget
+pkg install wget
+
+#Install gcc
+cd /usr/ports/devel/binutils && make install
+cd /usr/ports/lang/gcc44 && make install
+
+#Change the shell:
+chsh -s /bin/tcsh
+
+#At this point, I suggest stopping the VM and doing a snapshot. Keep the snapshot save, you don't want to start again from the beginning
+#Also, from the qemu command line: savevm. In case of disaster, we can always reload from this state using the 
+parameter -loadvm [id saved state]
+#you can check the id of the saved state using: qemu-img info instance_name.qcow2
+
+wget http://46.149.21.168/freebsd/gq-create-ssh-keys -O /etc/rc.d/gq-create-ssh-keys
+wget http://46.149.21.168/freebsd/gq-get-passwd -O /etc/rc.d/gq-get-passwd
+wget http://46.149.21.168/freebsd/gq-get-ssh-keys -O /etc/rc.d/gq-get-ssh-keys
+wget http://46.149.21.168/freebsd/gq-get-userdata -O /etc/rc.d/gq-get-userdata
+
+chmod +x /etc/rc.d/gq-create-ssh-keys
+chmod +x /etc/rc.d/gq-get-passwd
+chmod +x /etc/rc.d/gq-get-ssh-keys
+chmod +x /etc/rc.d/gq-get-userdata
+
+echo "NETWORKING=yes" > /etc/sysconfig/network
+
+#!!!!!! Now, here there should be the configuration of the network
+  DEVICE="eth0"
+  BOOTPROTO="dhcp"
+  NM_CONTROLLED="yes"
+  ONBOOT="yes"
+
+The line "#PermitRootLogin no" should be:
+PermitRootLogin yes
+
+#Clean /root from files that you have used/needed during the process (including the hidden ones).
+
+#Remove the ssh keys
+rm /etc/ssh/ssh_host*
+
+#Edit /etc/rc.conf
+#Leave the line hostname="whatever name you write during installation"
+Like this: hostname=""
+
+#Clean history!
+
+history -c
+
+#In FreeBSD most logs that are disabled by default. There's not much to delete under /var/log but check it out, to be sure.
+
+#Start the ssh service!!
+
+#Stop the machine
+history -c && halt -p
+
+
+

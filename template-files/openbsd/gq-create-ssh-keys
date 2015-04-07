@@ -1,0 +1,17 @@
+#!/usr/local/bin/bash
+
+#
+# GQ: Create missing SSH host keys
+#
+
+ssh_key_gen=/usr/bin/ssh-keygen
+ssh_conf_dir=/etc/ssh
+ssh_key_algorithms="dsa rsa"
+
+for algorithm in $ssh_key_algorithms; do
+    key_file=$(printf "%s/ssh_host_%s_key\n" $ssh_conf_dir $algorithm)
+    if [ ! -e $key_file ]; then
+        $ssh_key_gen -q -N "" -t $algorithm -f $key_file
+    fi
+done
+

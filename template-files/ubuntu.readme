@@ -1,0 +1,155 @@
+apt-get update 
+apt-get upgrade
+apt-get install acpid
+echo "acpiphp" >> /etc/modules
+#disable screensaver - this should go before exit 0 on /etc/rc.local
+echo "sh -c 'setterm -blank 0 -powersave off -powerdown 0 < /dev/console > /dev/console 2>&1'" >> /etc/rc.local
+Afterwards, edit /etc/rc.local and erase the first 'exit 0'. Write 'exit 0' at the end of the file. Use nano, it's installed by default.
+
+sudo chown -R root:root  /etc 
+sudo chown -R root:root /etc/init /etc/init.d /etc/dhcp3
+
+echo "blacklist vga16fb" >> /etc/modprobe.d/blacklist-framebuffer.conf
+#sed 's@us.archive.ubuntu.com@is.archive.ubuntu.com@' -i /etc/apt/sources.list (is.archive.ubuntu is curently down)
+
+cat > /etc/sudoers << EOF
+Defaults env_reset
+root ALL=(ALL) ALL
+%admin ALL=(ALL) NOPASSWD: ALL
+%sudo ALL=NOPASSWD: ALL
+#includedir /etc/sudoers.d
+EOF
+
+It's easier to modify /etc/sudoers with nano.
+
+#Nullify ubuntu password:
+ubuntu_pass=`awk -F: '/ubuntu/ {print $2}' /etc/shadow`
+or: 
+ubuntu_pass=`cat /etc/shadow | awk -F: '/ubuntu/ {print $2}'` (I think that this way is clearer to understand)
+sed -i "s#$ubuntu_pass#!#" /etc/shadow
+
+sudo locale-gen is_IS is_IS.utf8
+dpkg-reconfigure locales
+
+#for desktop versions:
+#remove OpenSSH:
+apt-get remove openssh-client openssh-server
+#install OpenSSH again:
+apt-get install openssh-client openssh-server
+#disable guest account
+sudo gedit /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf
+Add the line:
+allow-guest=false
+#install curl
+apt-get install curl
+#fix ec-2 metadata
+rm /etc/network/if-up.d/avahi-autoipd
+#setting dhcp hostname works on even reboots
+
+
+wget http://s.greenqloud.com/template-scripts/ubuntu/11.04/dhclient-exit-hooks.d/hostname -O /etc/dhcp/dhclient-exit-hooks.d/hostname
+wget http://s.greenqloud.com/template-scripts/ubuntu/11.04/init/gq-create-ssh-keys.conf -O /etc/init/gq-create-ssh-keys.conf
+wget http://s.greenqloud.com/template-scripts/ubuntu/11.04/init/gq-get-password.conf -O /etc/init/gq-get-password.conf
+wget http://s.greenqloud.com/template-scripts/ubuntu/11.04/init/gq-get-ssh-keys.conf -O /etc/init/gq-get-ssh-keys.conf
+wget http://s.greenqloud.com/template-scripts/ubuntu/11.04/init/gq-get-userdata.conf -O /etc/init/gq-get-userdata.conf
+
+wget http://s.greenqloud.com/template-scripts/ubuntu/11.04/init.d/gq-get-passwd -O /etc/init.d/gq-get-passwd
+wget http://s.greenqloud.com/template-scripts/ubuntu/11.04/init.d/gq-get-ssh-keys -O /etc/init.d/gq-get-ssh-keys
+
+chmod 755 /etc/init.d/gq-get-passwd 
+chmod 755 /etc/init.d/gq-get-ssh-keys
+
+Atention!! Check gq-get-passwd.
+There is a line that starts like this "user =", that line should look like this 
+user = ubuntu
+
+Before the last line of the file add: chown -R $user:$user $sshdir
+
+update-rc.d gq-get-passwd defaults
+update-rc.d gq-get-ssh-keys defaults
+
+rm /etc/ssh/ssh_host_dsa_key /etc/ssh/ssh_host_dsa_key.pub
+rm /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_ecdsa_key.pub
+rm /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key.pub
+rm /var/cache/apt/*.bin
+
+
+# in guestfish, guestfish -i -a ub.qcow2:
+
+write /var/log/alternatives.log ""
+write /var/log/apparmor ""
+write /var/log/apt/history.log ""
+write /var/log/apt/term.log ""
+write /var/log/aptitude ""
+write /var/log/auth.log ""
+write /var/log/boot ""
+write /var/log/boot.log ""
+write /var/log/btmp ""
+write /var/log/dist-upgrade ""
+write /var/log/dmesg ""
+write /var/log/dpkg.log ""
+write /var/log/faillog ""
+write /var/log/installer/cdebconf/questions.dat ""
+write /var/log/installer/cdebconf/templates.dat ""
+write /var/log/installer/hardware-summary ""
+write /var/log/installer/initial-status.gz ""
+write /var/log/installer/lsb-release ""
+write /var/log/installer/media-info ""
+write /var/log/installer/partman ""
+write /var/log/installer/status ""
+write /var/log/installer/syslog ""
+write /var/log/kern.log ""
+write /var/log/landscape ""
+write /var/log/lastlog ""
+write /var/log/mail.err ""
+write /var/log/mail.log ""
+write /var/log/pycentral.log ""
+write /var/log/syslog ""
+write /var/log/udev ""
+write /var/log/ufw.log ""
+write /var/log/wtmp ""
+write /var/log/news/news.* ""
+
+glob rm-rf /etc/udev/rules.d/*.rules
+
+On newer versions of Ubuntu glob is included in the package debian-goodies.
+
+rm /var/log/dmesg.*
+rm /root/.aptitude/config 
+rmdir /root/.aptitude
+rm /root/.bash_history 
+rm /root/.viminfo 
+rm /home/ubuntu/.bash_history 
+rm /home/ubuntu/.cache/motd.legal-displayed 
+rmdir /home/ubuntu/.cache
+rm /home/ubuntu/.sudo_as_admin_successful 
+rm /home/ubuntu/.viminfo 
+rm /tmp/smu2
+rm /tmp/ssh_host_dsa_key*
+rm /tmp/ssh_host_dsa_key
+rm /tmp/ssh_host_dsa_key.pub
+rm /tmp/ssh_host_ecdsa_key
+rm /tmp/ssh_host_ecdsa_key.pub 
+rm /tmp/ssh_host_rsa_key
+rm /tmp/ssh_host_rsa_key.pub 
+
+Also check if root is the owner of /etc, /etc/init.d and /etc/dhcp3
+
+chown -R root:root /etc that should do it.
+
+rm /etc/ssh/ssh_host_dsa_key 
+rm /etc/ssh/ssh_host_dsa_key.pub
+rm /etc/ssh/ssh_host_ecdsa_key 
+rm /etc/ssh/ssh_host_ecdsa_key.pub
+rm /etc/ssh/ssh_host_rsa_key 
+rm /etc/ssh/ssh_host_rsa_key.pub
+
+#Usually this was done sooner, but with the current version of Ubuntu it's safer to get rid of 
+#the network-manager as late as possible.
+apt-get purge network-manager 
+
+#Check that /etc/network/interfaces looks fine. It should look like this:
+auto eth0
+iface lo inet loopback
+iface eth0 inet dhcp
+

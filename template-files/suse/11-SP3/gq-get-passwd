@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#
+# GQ: Get passwd for user
+#
+
+# Modify this line to specify the user (default is root)
+user=root
+
+
+# Get DomR Ip
+i=1
+while [ $i -le 5 ]; do
+    DOMR_IP=$(netstat -nr | grep UG | awk '{print $2}')
+    if [ -n "$DOMR_IP" ]; then
+        break;
+    fi
+    if [ $x -eq 5 ]; then
+        echo "DomR IP address not found. Exiting."
+        exit 1
+    fi
+    sleep 2
+    i=$i+1
+done
+
+# Get passwd
+password=$(wget --quiet -t 3 -T 20 -O - --header "DomU_Request: send_my_password" $DOMR_IP:8080 2>/dev/null)
+if [ $? -ne 0 ]; then
+    echo "Error receiving passwd. Exiting."
+    exit 1
+fi
+
+password=$(echo $password | tr -d '\r')
+if [ "$password" = "bad_request" ]; then
+    echo "Error receiving passwd; bad request. Exiting."
+    exit 1
+fi
+
+if [ "$password" != "saved_password" ]; then
+    echo $password | passwd --stdin $user 2>/dev/null
+    if [ $? -gt 0 ]; then
+	echo $password | passwd --stdin $user 2>/dev/null
+	if [ $? -gt 0 ]; then
+            echo "Error saving passwd. Exiting."
+            exit 1
+        fi
+    fi
+    wget -t 3 -T 20 -O - --header "DomU_Request: saved_password" $DOMR_IP:8080 2>/dev/null
+fi
