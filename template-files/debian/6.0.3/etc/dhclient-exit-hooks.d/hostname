@@ -1,0 +1,13 @@
+# set hostname
+
+if [ "$new_ip_address" -eq "" || "$new_domain_name_servers" -eq "" ]; then
+    exit
+fi
+
+reverse_dns=$(/usr/bin/host $new_ip_address $new_domain_name_servers 2>/dev/null)
+
+if [ $? -eq 0 ]; then
+    hostname=$(echo $reverse_dns|awk '{print $13}'|sed s/.$//)
+    /bin/hostname $hostname
+    /bin/echo $hostname > /etc/hostname
+fi

@@ -1,0 +1,76 @@
+#install curl
+pkgin install curl
+#get ssh files
+curl http://s.greenqloud.com/template-scripts/centos/6.0/init.d/gq-create-ssh-keys -O /etc/rc.d/init.d/gq-create-ssh-keys
+curl http://s.greenqloud.com/template-scripts/centos/6.0/init.d/gq-get-passwd -O /etc/rc.d/init.d/gq-get-passwd
+curl http://s.greenqloud.com/template-scripts/centos/6.0/init.d/gq-get-ssh-keys -O /etc/rc.d/init.d/gq-get-ssh-keys
+curl http://s.greenqloud.com/template-scripts/centos/6.0/init.d/gq-get-userdata -O /etc/rc.d/init.d/gq-get-userdata
+
+chmod 755 /etc/rc.d/init.d/gq-create-ssh-keys
+chmod 755 /etc/rc.d/init.d/gq-get-passwd
+chmod 755 /etc/rc.d/init.d/gq-get-ssh-keys
+chmod 755 /etc/rc.d/init.d/gq-get-userdata
+
+ln -s /etc/rc.d/init.d/gq-create-ssh-keys /etc/rc.d/rc3.d/S50gq-create-ssh-keys
+ln -s /etc/rc.d/init.d/gq-get-passwd /etc/rc.d/rc3.d/S50gq-get-passwd
+ln -s /etc/rc.d/init.d/gq-get-ssh-keys /etc/rc.d/rc3.d/S50gq-get-ssh-keys 
+ln -s /etc/rc.d/init.d/gq-get-userdata /etc/rc.d/rc3.d/S50gq-get-userdata
+ln -s /etc/rc.d/init.d/gq-create-ssh-keys /etc/rc.d/rc5.d/S50gq-create-ssh-keys
+ln -s /etc/rc.d/init.d/gq-get-passwd /etc/rc.d/rc5.d/S50gq-get-passwd
+ln -s /etc/rc.d/init.d/gq-get-ssh-keys /etc/rc.d/rc5.d/S50gq-get-ssh-keys 
+ln -s /etc/rc.d/init.d/gq-get-userdata /etc/rc.d/rc5.d/S50gq-get-userdata
+
+echo "NETWORKING=yes" > /etc/sysconfig/network
+
+cat > /etc/sysconfig/network-scripts/ifcfg-eth0 << EOF
+DEVICE="eth0"
+BOOTPROTO="dhcp"
+NM_CONTROLLED="yes"
+ONBOOT="yes"
+EOF
+
+#guestfish
+
+rm /etc/udev/rules.d/70-persistent-cd.rules 
+rm /etc/udev/rules.d/70-persistent-net.rulesrm /root/.bash_history
+rm /root/.bash_history
+rm /root/anaconda-ks.cfg 
+rm /root/initramfs-2.6.32-71.el6.x86_64.img 
+rm /root/install.log
+rm /root/install.log.syslog 
+rm /root/mods
+rm /root/mods2
+
+write /var/log/anaconda.log ""
+write /var/log/anaconda.program.log ""
+write /var/log/anaconda.storage.log ""
+write /var/log/anaconda.syslog ""
+write /var/log/anaconda.xlog ""
+write /var/log/anaconda.yum.log ""
+write /var/log/audit/audit.log ""
+write /var/log/boot.log ""
+write /var/log/btmp ""
+write /var/log/cron ""
+write /var/log/dmesg ""
+write /var/log/dmesg.old ""
+write /var/log/lastlog ""
+write /var/log/maillog ""
+write /var/log/mcelog ""
+write /var/log/messages ""
+write /var/log/prelink/prelink.log ""
+write /var/log/secure ""
+write /var/log/spooler ""
+write /var/log/tallylog ""
+write /var/log/wtmp ""
+write /var/log/yum.log ""
+write /var/run/utmp ""
+write /var/log/Xorg.0.log ""
+write /var/log/Xorg.0.log.old ""
+write /var/log/Xorg.9.log ""
+write /var/log/wpa_supplicant.log ""
+rm /var/log/sa/sa27
+rm /var/log/sa/sa28
+rm /var/log/sa/sa29
+rm /var/log/sa/sar27
+
+

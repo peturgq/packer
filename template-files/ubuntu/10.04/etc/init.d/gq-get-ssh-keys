@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# Get SSH keys from domr
+#
+
+# Modify this line to specify the user (default is root)
+user=ubuntu
+
+
+# Get DomR Ip
+for x in $(seq 1 5); do
+    DOMR_IP=$(route -n|awk '/^0.0.0.0/ {print $2}')
+    if [ -n "$DOMR_IP" ]; then
+        break;
+    fi
+    if [ $x -eq 5 ]; then
+        echo "DomR IP address not found. Exiting."
+        exit 1
+    fi
+    sleep 2
+done
+
+# Get ssh public key
+homedir=$(grep ^$user /etc/passwd|awk -F ":" '{print $6}')
+sshdir=$homedir/.ssh
+authorized=$sshdir/authorized_keys
+publickey=$(wget -t 3 -T 20 -O - http://$DOMR_IP/latest/public-keys 2>/dev/null)
+
+if [ $? -ne 0 ]; then
+    echo "Error receiving SSH public key. Exiting."
+    exit 1
+fi
+
+if [ ! -e $sshdir ]; then
+    mkdir $sshdir
+fi
+
+if [ ! -e $authorized ]; then
+    touch $authorized
+fi
+
+otherkeys=$(cat $authorized|grep -v "$publickey")
+echo "$publickey" > $authorized
+echo "$otherkeys" >> $authorized
+
+exit 0

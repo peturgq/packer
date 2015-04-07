@@ -1,0 +1,12 @@
+# set hostname
+
+reverse_dns=$(/usr/bin/host $new_ip_address $new_domain_name_servers)
+
+if [ $? -eq 0 ]; then
+    myhostname=`hostname -s`
+    if [[ $myhostname == "ubuntu" ]]; then
+        hostname=$(echo $reverse_dns|awk '{print $13}'|sed s/.$//)
+        /bin/hostname $hostname
+        /bin/echo $hostname > /etc/hostname
+    fi
+fi

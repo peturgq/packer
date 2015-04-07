@@ -1,0 +1,43 @@
+# set hostname
+
+reverse_dns=$(/usr/bin/host $new_ip_address $new_domain_name_servers)
+
+if [ $? -eq 0 ]; then
+    myhostname=`hostname -s`
+    if [[ $myhostname == "ubuntu" ]]; then
+        hostname=$(echo $reverse_dns|awk '{print $13}'|sed s/.$//)
+        /bin/hostname $hostname
+        /bin/echo $hostname > /etc/hostname
+    fi
+fi
+# set hostname ( for desktop versions)
+myhostname=`hostname -s`
+if [[ $myhostname == "ubuntu" ]]; then
+    ip=$(ifconfig eth0 | grep inet | grep -v inet6 | awk '{print $2}' | awk -F":" '{print $2}')
+    hostname=$(host $ip | awk '{print $5}' | awk -F"." '{print$1}')
+    /bin/hostname $hostname
+    /bin/echo $hostname > /etc/hostname
+    cp /etc/hosts.bak /etc/hosts
+    sed 's/ubuntu/'$hostname'/' </etc/hosts >/etc/hosts2
+    mv /etc/hosts2 /etc/hosts
+fi
+
+if [[ $myhostname == "localhost" ]]; then
+    ip=$(ifconfig eth0 | grep inet | grep -v inet6 | awk '{print $2}' | awk -F":" '{print $2}')
+    hostname=$(host $ip | awk '{print $5}' | awk -F"." '{print$1}')
+    /bin/hostname $hostname
+    /bin/echo $hostname > /etc/hostname
+    cp /etc/hosts.bak /etc/hosts
+    sed 's/ubuntu/'$hostname'/' </etc/hosts >/etc/hosts2
+    mv /etc/hosts2 /etc/hosts
+fi
+
+if [[ $myhostname == "(none)" ]]; then
+    ip=$(ifconfig eth0 | grep inet | grep -v inet6 | awk '{print $2}' | awk -F":" '{print $2}')
+    hostname=$(host $ip | awk '{print $5}' | awk -F"." '{print$1}')
+    /bin/hostname $hostname
+    /bin/echo $hostname > /etc/hostname
+    cp /etc/hosts.bak /etc/hosts
+    sed 's/ubuntu/'$hostname'/' </etc/hosts >/etc/hosts2
+    mv /etc/hosts2 /etc/hosts
+fi

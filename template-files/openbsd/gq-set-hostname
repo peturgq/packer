@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Get DomR Ip
+i=1
+while [ $i -le 5 ]; do
+    DOMR_IP=$(netstat -nr|grep default | awk '{print $2}')
+    if [ -n "$DOMR_IP" ]; then
+        break;
+    fi
+    if [ $x -eq 5 ]; then
+        echo "DomR IP address not found. Exiting."
+        exit 1
+    fi
+    sleep 2
+    i=$i+1
+done
+
+hostname=$(route get $DOMR_IP | grep 'if address' | cut -c 13-23 )
+
+myname=$(cat /etc/myname)
+size=${#myname}
+
+echo $size
+
+if [$size -eq 0]; then
+    rm /etc/myname
+    touch /etc/myname
+    echo $hostname >> /etc/myname
+fi
