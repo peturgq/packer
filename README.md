@@ -1,13 +1,13 @@
 Packer Templates
 ================
 
-GreenQloud's Packer Templates is a project encapsulates [Packer](http://packer.io) templates for building virtual machine images for CloudStack. There are also templates for creating [Vagrant](http://vagrantup.com) baseboxes these boxes are used for testing Single Node Developer Setups.
+GreenQloud's Packer Templates is a project that encapsulates [Packer](http://packer.io) templates for building virtual machine images for CloudStack. There are also templates for creating [Vagrant](http://vagrantup.com) baseboxes, which are used for testing Single Node Developer Setups.
 
 # Useful commands
 
 Packer validate: `packer validate template.json`
 
-Packer debug and logging: `. debug.rc` (in projects main directory)
+Packer debug and logging: `. debug.rc` (in project's main directory)
 
 Packer build template: `packer build template.json` (make is often a better option)
 
@@ -15,7 +15,7 @@ Packer build with specified builder: `packer build -only=vmware-iso template.jso
 
 # CloudStack
 
-The virtual machine images build for CloudStack are currently made for two types of builds one of them is qemu/kvm which is used by GreenQloud the other one is VMware which is used for Customer.
+The virtual machine images built for CloudStack are currently made for two types of hypervisors; QEMU/KVM and VMWare.
 
 ## Templates
 
