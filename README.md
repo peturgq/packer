@@ -1,13 +1,13 @@
 Packer Templates
 ================
 
-Greenqlouds packer templates is a project encapsulates [Packer](http://packer.io) templates for building virtual machine images for CloudStack. There are also templates for creating [Vagrant](http://vagrantup.com) baseboxes these boxes are used for testing Single Node Developer Setups.
+GreenQloud's Packer Templates is a project encapsulates [Packer](http://packer.io) templates for building virtual machine images for CloudStack. There are also templates for creating [Vagrant](http://vagrantup.com) baseboxes these boxes are used for testing Single Node Developer Setups.
 
-# Usefull commands
+# Useful commands
 
 Packer validate: `packer validate template.json`
 
-Packer debug and loging: `. debug.rc` (in projects main directory)
+Packer debug and logging: `. debug.rc` (in projects main directory)
 
 Packer build template: `packer build template.json` (make is often a better option)
 
@@ -40,7 +40,7 @@ VMware: `make centos-6.5-vmware`
 # Vagrant
 
 Current developer baseboxes include chef, and depending on the version an upgraded
-kernel, dependencies allready install.
+kernel, dependencies already installed.
 
 ### Raw Baseboxes
 
@@ -60,9 +60,9 @@ Baseboxes used for testing CloudStack.
 
 gqdev_centos-6.5_cs-base.box
 
-### Basebox with dependencies and CloudStack allready setup. (Future Option)
+### Basebox with dependencies and CloudStack already setup. (Future Option)
 
-Basicly a CloudStack instalation in a box, combined with upgrade scripts this could be used to get a dev enviroment setup with little effort. 
+Basically a CloudStack installation in a box, combined with upgrade scripts this could be used to get a development environment setup with little effort.
 
 gqdev_centos-6.5_cs-full.box
 
