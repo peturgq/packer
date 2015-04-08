@@ -16,6 +16,10 @@ apt-get install -y wget
 
 rm /etc/network/if-up.d/avahi-autoipd
 
+# qstack common files
+mkdir -p /usr/local/qstack/
+cp -r /tmp/qstack-files/* /usr/local/qstack/
+
 # copy uploaded template files
 function move_file {
     FNAME=$1
@@ -30,14 +34,6 @@ move_file "/etc/init/gq-get-ssh-keys.conf"
 move_file "/etc/init/gq-get-userdata.conf"
 move_file "/etc/init.d/gq-get-passwd"
 move_file "/etc/init.d/gq-get-ssh-keys"
-
-# old
-#wget http://192.168.3.253/tmpl/ubuntu14/gq-create-ssh-keys.conf -O /etc/init/gq-create-ssh-keys.conf
-#wget http://192.168.3.253/tmpl/ubuntu14/gq-get-passwd.conf -O /etc/init/gq-get-passwd.conf
-#wget http://192.168.3.253/tmpl/ubuntu14/gq-get-ssh-keys.conf -O /etc/init/gq-get-ssh-keys.conf
-#wget http://192.168.3.253/tmpl/ubuntu14/gq-get-userdata.conf -O /etc/init/gq-get-userdata.conf
-#wget http://192.168.3.253/tmpl/ubuntu14/gq-get-passwd -O /etc/init.d/gq-get-passwd
-#wget http://192.168.3.253/tmpl/ubuntu14/gq-get-ssh-keys -O /etc/init.d/gq-get-ssh-keys
 
 chmod 755 /etc/init.d/gq-get-passwd
 chmod 755 /etc/init.d/gq-get-ssh-keys
