@@ -54,7 +54,13 @@
     {
       "only": ["qemu"],
       "type": "shell",
-      "inline": ["mkdir -p /tmp/template-files"]
+      "inline": ["mkdir -p /tmp/template-files", "mkdir -p /tmp/qstack-files"]
+    },
+    {
+      "only": ["qemu"],
+      "type": "file",
+      "source": "../template-files/base/",
+      "destination": "/tmp/qstack-files"
     },
     {
       "only": ["qemu"],

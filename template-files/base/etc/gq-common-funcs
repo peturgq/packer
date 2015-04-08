@@ -1,0 +1,53 @@
+# Copyright (c) GreenQloud 2015
+#
+# This file contains functions used by the init scripts when the
+# machine is booted up.  They relate mostly to finding IP address of
+# the DHCP server in order to query information from it.
+
+# Find the DHCP leases file, which is at different locations depending
+# on the distro.
+function find_dhcp_lease_file {
+    if [ -f /etc/debian_version ]; then
+	if [ -f /var/lib/NetworkManager/ ]; then
+	    echo '/var/lib/NetworkManager/dhclient-*.lease'
+	else
+	    echo '/var/lib/dhcp/dhclient*.leases'
+	fi
+    elif [ -f /etc/redhat-release ]; then
+	# Find major distro release (RHEL and derivatives)
+	RHELMAJORREL=$(rpm -qa centos-release | grep -Ei "oracle|redhat|centos" | cut -d"-" -f3)
+	# Find the boot server
+	if [ $RHELMAJORREL == 6 ] ; then
+	    echo '/var/lib/dhclient/*.leases'
+	elif [ $RHELMAJORREL == 7 ] ; then
+	    echo '/var/lib/NetworkManager/dhclient-*.lease'
+	fi
+    else
+	# Could not really detect OS, just dump some default location!
+	echo '/var/lib/dhcp/dhclient*.leases'
+    fi
+}
+
+# Get the domain router/DHCP server IP. This is the place acquire
+# passwords, user data, etc. It finds this information from the most
+# recent lease of the most recent DHCP file. This function MUST be
+# called with the parameter in single quotes, to stop shell expansion
+# before it is executed.
+function get_domr_ip {
+    # -f is no globbing. Makes the find command work properly.
+    set -f
+    DHCP_FILE=$1
+    SINGLE_FILE=$(find `dirname $DHCP_FILE` -type f -name "`basename $DHCP_FILE`" -exec ls -1t "{}" + | head -n 1)
+
+    TOT_LINES=$(cat $SINGLE_FILE | wc -l)
+    REV_LINE=$(tac $SINGLE_FILE | grep -hm 1 -n "lease {" | awk -F':' '{print $1}')
+
+    BEGIN_LINE=$((TOT_LINES-REV_LINE))
+    if [ $BEGIN_LINE -eq "0" ]; then
+        BEGIN_LINE=1
+    fi
+
+    DHCP_IP=$(sed -n "$BEGIN_LINE,${TOT_LINES}p" $SINGLE_FILE | grep -hm 1 "dhcp-server-identifier" | awk '{print $3}' | sed 's/;$//')
+    set +f
+    echo $DHCP_IP
+}
