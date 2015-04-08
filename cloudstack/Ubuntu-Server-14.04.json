@@ -16,7 +16,7 @@
       "type": "qemu",
       "accelerator": "kvm",
       "format": "qcow2",
-      "shutdown_command": "",
+      "shutdown_command": "echo 'temp' | sudo -S shutdown -P now",
       "iso_urls": [
         "../iso/{{user `ISO`}}",
         "{{user `ISO_URL`}}"
