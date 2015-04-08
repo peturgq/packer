@@ -67,9 +67,5 @@ rm /tmp/ssh_host_ecdsa_key.pub
 rm /tmp/ssh_host_rsa_key
 rm /tmp/ssh_host_rsa_key.pub
 
-ubuntu_pass=`cat /etc/shadow | awk -F: '/ubuntu/ {print $2}'`
-echo "Password before substitution: "
-echo $ubuntu_pass
-sed -i "s#$ubuntu_pass#*#" /etc/shadow
-
 history -c
+exit 0

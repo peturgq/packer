@@ -6,19 +6,17 @@
 # Modify this line to specify the user (default is root)
 user=ubuntu
 
+. /usr/local/qstack/etc/gq-common-funcs
 
-# Get DomR Ip
-for x in $(seq 1 5); do
-    DOMR_IP=$(route -n|awk '/^0.0.0.0/ {print $2}')
-    if [ -n "$DOMR_IP" ]; then
-        break;
-    fi
-    if [ $x -eq 5 ]; then
-        echo "DomR IP address not found. Exiting."
-        exit 1
-    fi
-    sleep 2
-done
+# Get router/dhcp server IP. The weird quote structure for get_domr_ip
+# function is needed to embed the value in single quotes.
+DHCP_DIR=$(find_dhcp_lease_file)
+DOMR_IP=$(get_domr_ip ''"$DHCP_DIR"'')
+
+if [[ "$DOMR_IP" == "" ]]; then
+    echo "Could not find DOMR_IP. Exiting."
+    exit 1
+fi
 
 # Get ssh public key
 homedir=$(grep ^$user /etc/passwd|awk -F ":" '{print $6}')
