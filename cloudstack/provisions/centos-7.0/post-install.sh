@@ -34,7 +34,7 @@ ln -s /etc/init.d/remove-net-rules /etc/rc6.d/S00remove-net-rules
 yum -y install wget
 
 # copy qstack files over
-cp -r /tmp/template-files/* /
+cp -a /tmp/template-files/* /
 
 #wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-create-ssh-keys" -O /etc/rc.d/init.d/gq-create-ssh-keys
 #wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-get-passwd" -O /etc/rc.d/init.d/gq-get-passwd
