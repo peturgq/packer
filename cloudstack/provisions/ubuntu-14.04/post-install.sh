@@ -16,24 +16,8 @@ apt-get install -y wget
 
 rm /etc/network/if-up.d/avahi-autoipd
 
-# qstack common files
-mkdir -p /usr/local/qstack/
-cp -r /tmp/qstack-files/* /usr/local/qstack/
-
-# copy uploaded template files
-function move_file {
-    FNAME=$1
-    echo "Installing $FNAME"
-    mkdir -p `dirname /$FNAME`
-    cp -r /tmp/template-files/$FNAME /$FNAME
-}
-
-move_file "/etc/dhcp/dhclient-exit-hooks.d/hostname"
-move_file "/etc/init/gq-create-ssh-keys.conf"
-move_file "/etc/init/gq-get-ssh-keys.conf"
-move_file "/etc/init/gq-get-userdata.conf"
-move_file "/etc/init.d/gq-get-passwd"
-move_file "/etc/init.d/gq-get-ssh-keys"
+# copy the template files into the main filesystem
+cp -r /tmp/template-files/* /
 
 chmod 755 /etc/init.d/gq-get-passwd
 chmod 755 /etc/init.d/gq-get-ssh-keys
