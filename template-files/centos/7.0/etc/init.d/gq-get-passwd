@@ -4,22 +4,20 @@
 # GQ: Get passwd for user
 #
 
+. /usr/local/qstack/etc/gq-common-funcs
+
 # Modify this line to specify the user (default is root)
 user=root
 
+# Get router/dhcp server IP. The weird quote structure for get_domr_ip
+# function is needed to embed the value in single quotes.
+DHCP_DIR=$(find_dhcp_lease_file)
+DOMR_IP=$(get_domr_ip ''"$DHCP_DIR"'')
 
-# Get DomR Ip
-for x in $(seq 1 5); do
-    DOMR_IP=$(netstat -nr|grep default | awk '{print $2}')
-    if [ -n "$DOMR_IP" ]; then
-        break;
-    fi
-    if [ $x -eq 5 ]; then
-        echo "DomR IP address not found. Exiting."
-        exit 1
-    fi
-    sleep 2
-done
+if [[ "$DOMR_IP" == "" ]]; then
+    echo "Could not find DOMR_IP. Exiting."
+    exit 1
+fi
 
 # Get passwd
 password=$(wget --quiet -t 3 -T 20 -O - --header "DomU_Request: send_my_password" $DOMR_IP:8080 2>/dev/null)

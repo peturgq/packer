@@ -45,25 +45,23 @@ zerombr
 clearpart --all --initlabel
 
 # Disk partitioning information
-part /boot --fstype ext4 --fsoptions="noatime" --size=200
+part /boot --fstype xfs --fsoptions="noatime" --size=200
 part pv.1 --size 1 --grow
 volgroup vg0 pv.1
-logvol / --fstype ext4 --fsoptions="noatime" --name=root --vgname=vg0 --size=1 --grow
-logvol swap --fstype swap --name=swap --vgname=vg0 --size 512
+logvol / --fstype xfs --fsoptions="noatime" --name=root --vgname=vg0 --size=1 --grow
+logvol swap --fstype swap --name=swap --vgname=vg0 --size 4096
 
 services --enabled=network,ntpd,ntpdate
 
 # Poweroff after installation
-poweroff
+reboot
 
 %packages --nobase
-epel-release
 openssh-clients
 openssh-server
 yum
 at
 acpid
-vixie-cron
 cronie-noanacron
 crontabs
 logrotate
