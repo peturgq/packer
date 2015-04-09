@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) GreenQloud 2015
 #
 # This file contains functions used by the init scripts when the
@@ -32,7 +33,13 @@ function find_dhcp_lease_file {
 # passwords, user data, etc. It finds this information from the most
 # recent lease of the most recent DHCP file. This function MUST be
 # called with the parameter in single quotes, to stop shell expansion
-# before it is executed.
+# before it is executed. If you want to pass a variable into this
+# function, you should call it like so:
+#
+# $(get_domr_ip ''"$MY_VARIABLE"'')
+#
+# This makes sure the input is properly treated as a single quoted
+# string.
 function get_domr_ip {
     # -f is no globbing. Makes the find command work properly.
     set -f
