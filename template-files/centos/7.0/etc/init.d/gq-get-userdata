@@ -4,23 +4,22 @@
 # GQ: Get user data
 #
 
+. /usr/local/qstack/etc/gq-common-funcs
+
 # Modify this line to specify filename
 file=/tmp/userdata
 
-# Get DomR Ip
-for x in $(seq 1 5); do
-    DOMR_IP=$(netstat -nr|grep default | awk '{print $2}')
-    if [ -n "$DOMR_IP" ]; then
-        break;
-    fi
-    if [ $x -eq 5 ]; then
-        echo "DomR IP address not found. Exiting."
-        exit 1
-    fi
-    sleep 2
-done
+# Get router/dhcp server IP. The weird quote structure for get_domr_ip
+# function is needed to embed the value in single quotes.
+DHCP_DIR=$(find_dhcp_lease_file)
+DOMR_IP=$(get_domr_ip ''"$DHCP_DIR"'')
 
-# Get userdata 
+if [[ "$DOMR_IP" == "" ]]; then
+    echo "Could not find DOMR_IP. Exiting."
+    exit 1
+fi
+
+# Get userdata
 userdata=$(wget -t 3 -T 20 -O - http://$DOMR_IP/latest/user-data 2>/dev/null)
 
 if [ $? -ne 0 ]; then

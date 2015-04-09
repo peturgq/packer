@@ -33,10 +33,13 @@ ln -s /etc/init.d/remove-net-rules /etc/rc6.d/S00remove-net-rules
 
 yum -y install wget
 
-wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-create-ssh-keys" -O /etc/rc.d/init.d/gq-create-ssh-keys
-wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-get-passwd" -O /etc/rc.d/init.d/gq-get-passwd
-wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-get-ssh-keys" -O /etc/rc.d/init.d/gq-get-ssh-keys
-wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-get-userdata" -O /etc/rc.d/init.d/gq-get-userdata
+# copy qstack files over
+cp -r /tmp/template-files/* /
+
+#wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-create-ssh-keys" -O /etc/rc.d/init.d/gq-create-ssh-keys
+#wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-get-passwd" -O /etc/rc.d/init.d/gq-get-passwd
+#wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-get-ssh-keys" -O /etc/rc.d/init.d/gq-get-ssh-keys
+#wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-get-userdata" -O /etc/rc.d/init.d/gq-get-userdata
 
 chmod 755 /etc/rc.d/init.d/gq-create-ssh-keys
 chmod 755 /etc/rc.d/init.d/gq-get-passwd
@@ -66,5 +69,3 @@ rm /root/ks-post.log
 
 rm /var/log/*
 rm -R /var/log/*
-
-
