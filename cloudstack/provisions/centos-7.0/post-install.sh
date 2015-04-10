@@ -40,8 +40,14 @@ chmod 755 /usr/local/qstack/bin/*
 chmod 644 /etc/systemd/system/gq-create-ssh-keys.service
 chmod 644 /etc/systemd/system/gq-get-passwd.service
 chmod 644 /etc/systemd/system/gq-get-ssh-keys.service
-chmod 644 /etc/systemd/system//gq-get-userdata.service
+chmod 644 /etc/systemd/system/gq-get-userdata.service
 
+systemctl enable gq-create-ssh-keys
+systemctl enable gq-get-passwd
+systemctl enable gq-get-ssh-keys
+systemctl enable gq-get-userdata
+
+# sanitize server
 rm /etc/udev/rules.d/70-persistent-cd.rules
 rm /etc/udev/rules.d/70-persistent-net.rules
 
