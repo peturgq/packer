@@ -36,6 +36,7 @@ yum -y install wget
 # copy qstack files over and set up services
 cp -a /tmp/template-files/* /
 
+chmod 755 /usr/local/qstack/bin/*
 chmod 644 /etc/systemd/system/gq-create-ssh-keys.service
 chmod 644 /etc/systemd/system/gq-get-passwd.service
 chmod 644 /etc/systemd/system/gq-get-ssh-keys.service

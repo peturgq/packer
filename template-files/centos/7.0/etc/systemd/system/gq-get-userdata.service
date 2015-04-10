@@ -5,3 +5,6 @@ After=networking.target
 [Service]
 Type=simple
 ExecStart=/usr/local/qstack/bin/gq-get-userdata
+
+[Install]
+WantedBy=multi-user.target
