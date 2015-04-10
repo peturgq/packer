@@ -1,0 +1,45 @@
+#!/bin/bash
+
+#
+# GQ: Get passwd for user
+#
+
+. /usr/local/qstack/etc/gq-common-funcs
+
+# Modify this line to specify the user (default is root)
+user=root
+
+# Get router/dhcp server IP. The weird quote structure for get_domr_ip
+# function is needed to embed the value in single quotes.
+DHCP_DIR=$(find_dhcp_lease_file)
+DOMR_IP=$(get_domr_ip ''"$DHCP_DIR"'')
+
+if [[ "$DOMR_IP" == "" ]]; then
+    echo "Could not find DOMR_IP. Exiting."
+    exit 1
+fi
+
+# Get passwd
+password=$(wget --quiet -t 3 -T 20 -O - --header "DomU_Request: send_my_password" $DOMR_IP:8080 2>/dev/null)
+if [ $? -ne 0 ]; then
+    echo "Error receiving passwd. Exiting."
+    exit 1
+fi
+
+password=$(echo $password | tr -d '\r')
+if [ "$password" = "bad_request" ]; then
+    echo "Error receiving passwd; bad request. Exiting."
+    exit 1
+fi
+
+if [ "$password" != "saved_password" ]; then
+    echo $password | passwd --stdin $user 2>/dev/null
+    if [ $? -gt 0 ]; then
+        echo $password | passwd --stdin $user 2>/dev/null
+        if [ $? -gt 0 ]; then
+            echo "Error saving passwd. Exiting."
+            exit 1
+        fi
+    fi
+    wget -t 3 -T 20 -O - --header "DomU_Request: saved_password" $DOMR_IP:8080 2>/dev/null
+fi
