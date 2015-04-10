@@ -1,6 +1,7 @@
 [Unit]
 Description=GQ Create SSH Keys Script
-After=network.target
+Requires=Network-Manager.service
+After=Network-Manager.service
 
 [Service]
 Type=simple
