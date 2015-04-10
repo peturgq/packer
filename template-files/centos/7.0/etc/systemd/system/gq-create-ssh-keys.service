@@ -1,6 +1,6 @@
 [Unit]
 Description=GQ Create SSH Keys Script
-After=networking.target
+After=network.target
 
 [Service]
 Type=simple
