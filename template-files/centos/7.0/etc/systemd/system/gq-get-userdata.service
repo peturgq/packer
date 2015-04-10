@@ -1,7 +1,9 @@
 [Unit]
 Description=GQ Get Userdata Script
-Requires=Network-Manager.service
-After=Network-Manager.service
+Requires=NetworkManager.service
+After=NetworkManager.service
+Requires=NetworkManager-wait-online.service
+After=NetworkManager-wait-online.service
 
 [Service]
 Type=simple

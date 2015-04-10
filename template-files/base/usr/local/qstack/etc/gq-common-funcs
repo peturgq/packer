@@ -9,23 +9,23 @@
 # on the distro.
 function find_dhcp_lease_file {
     if [ -f /etc/debian_version ]; then
-	if [ -f /var/lib/NetworkManager/ ]; then
-	    echo '/var/lib/NetworkManager/dhclient-*.lease'
-	else
-	    echo '/var/lib/dhcp/dhclient*.leases'
-	fi
+        if [ -f /var/lib/NetworkManager/ ]; then
+            echo '/var/lib/NetworkManager/dhclient-*.lease'
+        else
+            echo '/var/lib/dhcp/dhclient*.leases'
+        fi
     elif [ -f /etc/redhat-release ]; then
-	# Find major distro release (RHEL and derivatives)
-	RHELMAJORREL=$(rpm -qa centos-release | grep -Ei "oracle|redhat|centos" | cut -d"-" -f3)
-	# Find the boot server
-	if [ $RHELMAJORREL == 6 ] ; then
-	    echo '/var/lib/dhclient/*.leases'
-	elif [ $RHELMAJORREL == 7 ] ; then
-	    echo '/var/lib/NetworkManager/dhclient-*.lease'
-	fi
+        # Find major distro release (RHEL and derivatives)
+        RHELMAJORREL=$(rpm -qa centos-release | grep -Ei "oracle|redhat|centos" | cut -d"-" -f3)
+        # Find the boot server
+        if [ $RHELMAJORREL == 6 ] ; then
+            echo '/var/lib/dhclient/*.leases'
+        elif [ $RHELMAJORREL == 7 ] ; then
+            echo '/var/lib/NetworkManager/dhclient-*.lease'
+        fi
     else
-	# Could not really detect OS, just dump some default location!
-	echo '/var/lib/dhcp/dhclient*.leases'
+        # Could not really detect OS, just dump some default location!
+        echo '/var/lib/dhcp/dhclient*.leases'
     fi
 }
 
@@ -43,6 +43,15 @@ function find_dhcp_lease_file {
 function get_domr_ip {
     # -f is no globbing. Makes the find command work properly.
     set -f
+
+    # Make sure we actually have DHCP files.
+    # LSFILES=1
+    # until [[ LSFILES -ge 2 ]];
+    # do
+    #     LSFILES=$(ls -l $DHCP_FILE | wc -l)
+    #     sleep 5
+    # done
+
     DHCP_FILE=$1
     SINGLE_FILE=$(find `dirname $DHCP_FILE` -type f -name "`basename $DHCP_FILE`" -exec ls -1t "{}" + | head -n 1)
 

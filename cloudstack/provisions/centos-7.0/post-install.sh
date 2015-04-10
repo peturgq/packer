@@ -42,6 +42,7 @@ chmod 644 /etc/systemd/system/gq-get-passwd.service
 chmod 644 /etc/systemd/system/gq-get-ssh-keys.service
 chmod 644 /etc/systemd/system/gq-get-userdata.service
 
+systemctl enable NetworkManager-wait-online
 systemctl enable gq-create-ssh-keys
 systemctl enable gq-get-passwd
 systemctl enable gq-get-ssh-keys
