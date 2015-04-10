@@ -1,6 +1,7 @@
 [Unit]
 Description=GQ Get Userdata Script
-After=network.target
+Requires=Network-Manager.service
+After=Network-Manager.service
 
 [Service]
 Type=simple
