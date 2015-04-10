@@ -1,0 +1,7 @@
+[Unit]
+Description=GQ Get Password Script
+After=networking.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/qstack/bin/gq-get-passwd

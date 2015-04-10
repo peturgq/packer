@@ -33,30 +33,13 @@ ln -s /etc/init.d/remove-net-rules /etc/rc6.d/S00remove-net-rules
 
 yum -y install wget
 
-# copy qstack files over
+# copy qstack files over and set up services
 cp -a /tmp/template-files/* /
 
-#wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-create-ssh-keys" -O /etc/rc.d/init.d/gq-create-ssh-keys
-#wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-get-passwd" -O /etc/rc.d/init.d/gq-get-passwd
-#wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-get-ssh-keys" -O /etc/rc.d/init.d/gq-get-ssh-keys
-#wget "http://s.greenqloud.com/template-scripts/centos/6.5/gq-get-userdata" -O /etc/rc.d/init.d/gq-get-userdata
-
-chmod 755 /etc/rc.d/init.d/gq-create-ssh-keys
-chmod 755 /etc/rc.d/init.d/gq-get-passwd
-chmod 755 /etc/rc.d/init.d/gq-get-ssh-keys
-chmod 755 /etc/rc.d/init.d/gq-get-userdata
-
-ln -s /etc/rc.d/init.d/gq-create-ssh-keys /etc/rc.d/rc3.d/S50gq-create-ssh-keys
-ln -s /etc/rc.d/init.d/gq-create-ssh-keys /etc/rc.d/rc5.d/S50gq-create-ssh-keys
-
-ln -s /etc/rc.d/init.d/gq-get-passwd /etc/rc.d/rc3.d/S50gq-get-passwd
-ln -s /etc/rc.d/init.d/gq-get-passwd /etc/rc.d/rc5.d/S50gq-get-passwd
-
-ln -s /etc/rc.d/init.d/gq-get-ssh-keys /etc/rc.d/rc3.d/S50gq-get-ssh-keys
-ln -s /etc/rc.d/init.d/gq-get-ssh-keys /etc/rc.d/rc5.d/S50gq-get-ssh-keys
-
-ln -s /etc/rc.d/init.d/gq-get-userdata /etc/rc.d/rc3.d/S50gq-get-userdata
-ln -s /etc/rc.d/init.d/gq-get-userdata /etc/rc.d/rc5.d/S50gq-get-userdata
+chmod 644 /etc/systemd/system/gq-create-ssh-keys.service
+chmod 644 /etc/systemd/system/gq-get-passwd.service
+chmod 644 /etc/systemd/system/gq-get-ssh-keys.service
+chmod 644 /etc/systemd/system//gq-get-userdata.service
 
 rm /etc/udev/rules.d/70-persistent-cd.rules
 rm /etc/udev/rules.d/70-persistent-net.rules
@@ -69,3 +52,7 @@ rm /root/ks-post.log
 
 rm /var/log/*
 rm -R /var/log/*
+
+# clean out stale DHCP lease.
+#rm -f /var/lib/NetworkManager/*.lease
+exit 0

@@ -1,0 +1,7 @@
+[Unit]
+Description=GQ Get SSH Keys Script
+After=networking.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/qstack/bin/gq-get-ssh-keys

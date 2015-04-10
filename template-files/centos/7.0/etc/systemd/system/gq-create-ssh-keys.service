@@ -1,0 +1,7 @@
+[Unit]
+Description=GQ Create SSH Keys Script
+After=networking.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/qstack/bin/gq-create-ssh-keys
