@@ -36,9 +36,11 @@ if [ $? -eq 0 ]; then
 
     if [ $? -eq 0 ]; then
         rm $file
-        systemctl stop gq-get-userdata
-        systemctl disable gq-get-userdata
     fi
 fi
+
+# disable the service
+# systemd disable doesn't seem to work here.
+find /etc/systemd/system/multi-user.target.wants/ -name "gq-get-userdata.service" -exec rm -f {} \;
 
 exit 0
