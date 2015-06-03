@@ -19,7 +19,15 @@ The virtual machine images built for CloudStack are currently made for two types
 
 ## Templates
 
-The CloudStack templates are located under `templates`.
+The CloudStack templates are located under `cloudstack`. The linux templates all have their JSON files in this directory.
+
+The Windows 2012 R2 template is located in a self contained directory `cloudstack/windows`.
+
+### Windows 2012 R2
+
+Builders: QEMU
+
+See readme in `cloudstack/windows`.
 
 ### Windows 2008 r2 Datacenter
 
@@ -88,8 +96,3 @@ If you want to use a another mirror site, use mirror variable.
 ```text
 Copyright 2014, Greenqloud (<support@greenqloud.com>)
 ```
-
-
-
-
-
