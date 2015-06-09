@@ -1,6 +1,10 @@
 Packer Templates
 ================
 
+*note:*
+
+*GreenQloud provides no official support for this community repository*
+
 GreenQloud's Packer Templates is a project that encapsulates [Packer](http://packer.io) templates for building virtual machine images for CloudStack. There are also templates for creating [Vagrant](http://vagrantup.com) baseboxes, which are used for testing Single Node Developer Setups.
 
 # Useful commands
