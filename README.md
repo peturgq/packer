@@ -5,7 +5,7 @@ Packer Templates
 
 *GreenQloud provides no official support for this community repository*
 
-GreenQloud's Packer Templates is a project that encapsulates [Packer](http://packer.io) templates for building virtual machine images for CloudStack. There are also templates for creating [Vagrant](http://vagrantup.com) baseboxes, which are used for testing Single Node Developer Setups.
+GreenQloud's Packer Templates is a project that encapsulates [Packer](http://packer.io) templates for building virtual machine images for QStack. There are also templates for creating [Vagrant](http://vagrantup.com) baseboxes, which are used for testing Single Node Developer Setups.
 
 # Useful commands
 
@@ -17,13 +17,13 @@ Packer build template: `packer build template.json` (make is often a better opti
 
 Packer build with specified builder: `packer build -only=vmware-iso template.json`
 
-# CloudStack
+# QStack
 
-The virtual machine images built for CloudStack are currently made for two types of hypervisors; QEMU/KVM and VMWare.
+The virtual machine images built for QStack are currently made for two types of hypervisors; QEMU/KVM and VMWare.
 
 ## Templates
 
-The CloudStack templates are located under `cloudstack`. The linux templates all have their JSON files in this directory.
+The QStack templates are located under `cloudstack`. The linux templates all have their JSON files in this directory.
 
 The Windows 2012 R2 template is located in a self contained directory `cloudstack/windows`.
 
@@ -68,13 +68,13 @@ gqdev_centos-6.5_kernel-3.10.box
 
 ### Basebox with dependencies.
 
-Baseboxes used for testing CloudStack.
+Baseboxes used for testing QStack.
 
 gqdev_centos-6.5_cs-base.box
 
-### Basebox with dependencies and CloudStack already setup. (Future Option)
+### Basebox with dependencies and QStack already setup. (Future Option)
 
-Basically a CloudStack installation in a box, combined with upgrade scripts this could be used to get a development environment setup with little effort.
+Basically a QStack installation in a box, combined with upgrade scripts this could be used to get a development environment setup with little effort.
 
 gqdev_centos-6.5_cs-full.box
 
