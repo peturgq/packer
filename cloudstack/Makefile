@@ -110,3 +110,9 @@ windows-2008-r2-vmware:
 windows-2008-r2-qemu:
 	rm -rf builds/qemu/windows-2008-r2-datacenter
 	packer build -only=qemu windows-2008-r2.json
+
+coreos-stable-qemu:
+	rm -rf builds/qemu/coreos*
+	packer build -only=qemu coreos.json
+	find builds/qemu/coreos* -name *.qcow2 | xargs -I'{}' qemu-img convert -f qcow2 -O qcow2 '{}' '{}-new'
+	find builds/qemu/coreos* -name *.qcow2 | xargs -I'{}' mv '{}'-new '{}'
