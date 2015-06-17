@@ -1,0 +1,63 @@
+{
+    "variables": {
+        "password": "Password123",
+        "disk_size": "61440"
+    },
+
+    "builders": [
+        {
+            "name": "windows-2012R2",
+
+            "type": "qemu",
+            "format":"qcow2",
+            "accelerator": "kvm",
+            "disk_size": "{{ user `disk_size`}}",
+            "disk_interface":"virtio",
+
+            "iso_url": "http://46.149.26.128/en_windows_server_2012_r2_x64_dvd_2707946.iso",
+            "iso_checksum_type": "md5",
+            "iso_checksum": "0e7c09aab20dec3cd7eab236dab90e78",
+
+            "ssh_username": "Administrator",
+            "ssh_password": "Administrator",
+            "ssh_wait_timeout": "30m",
+	    "headless": true,
+
+            "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+            "boot_wait": "2s",
+
+            "floppy_files": [
+                "floppy/drivers/virtio-win-0.1-81/WIN7/AMD64/*",
+                "floppy/common/*",
+                "floppy/windows-2012-standard-amd64/*"
+            ]
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": ["net user Administrator {{ user `password`}}"]
+        },
+
+        {
+            "type": "file",
+            "source": "files/cloud-instance-manager.reg",
+            "destination": "cloud-instance-manager.reg"
+        },
+
+        {
+            "type": "shell",
+            "remote_path": "/cygdrive/c/Windows/Temp/script.bat",
+            "execute_command": "cmd /c C:/Windows/Temp/script.bat",
+            "scripts": [
+                "scripts/enable-rdp.bat",
+                "scripts/execution-policy-unrestricted.bat",
+                "scripts/unlimited-password-expiration.bat",
+		"scripts/cloudstack.bat",
+		"scripts/firewall-open-ping.bat",
+		"scripts/firewall-open-rdp.bat"
+            ]
+        }
+    ]
+}
