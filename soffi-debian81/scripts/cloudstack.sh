@@ -28,9 +28,9 @@ echo "localhost" > /etc/hostname
 
 #Set up the init scripts
 wget http://s.greenqloud.com/template-scripts/debian/7/gq-create-ssh-keys -O /etc/init.d/gq-create-ssh-keys
-wget http://s.greenqloud.com/template-scripts/debian/7/gq-get-passwd -O /etc/init.d/gq-get-passwd
-wget http://s.greenqloud.com/template-scripts/debian/7/gq-get-ssh-keys -O /etc/init.d/gq-get-ssh-keys
-wget http://s.greenqloud.com/template-scripts/debian/7/gq-get-userdata -O /etc/init.d/gq-get-userdata
+wget http://s.greenqloud.com/template-scripts/debian/7/baremetal/gq-get-passwd -O /etc/init.d/gq-get-passwd
+wget http://s.greenqloud.com/template-scripts/debian/7/baremetal/gq-get-ssh-keys -O /etc/init.d/gq-get-ssh-keys
+wget http://s.greenqloud.com/template-scripts/debian/7/baremetal/gq-get-userdata -O /etc/init.d/gq-get-userdata
 wget http://s.greenqloud.com/template-scripts/debian/7/hostname -O /etc/dhcp/dhclient-exit-hooks.d/hostname
 
 chmod 755 /etc/init.d/gq-create-ssh-keys
