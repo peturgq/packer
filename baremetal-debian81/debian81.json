@@ -2,7 +2,7 @@
     "variables": {
         "user": "admindebian",
         "password": "admindebian",
-        "disk_size": 10000,
+        "disk_size": 2000,
         "domain": ""
     },
 
@@ -56,6 +56,7 @@
                 "scripts/update.sh",
                 "scripts/packages.sh",
 		"scripts/cloudstack.sh",
+		"scripts/baremetal.sh",
                 "scripts/cleanup.sh"
             ]
         }
