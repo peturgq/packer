@@ -23,3 +23,11 @@ sed -i 's/lock_passwd: True/lock_passwd: False/' /etc/cloud/cloud.cfg
 sed -i 's/name: ubuntu/name: root/' /etc/cloud/cloud.cfg
 sed -i 's/disable_root: true/disable_root: false/' /etc/cloud/cloud.cfg 
 echo apt_preserve_sources_list: true >> /etc/cloud/cloud.cfg
+echo ssh_pwauth: True >> /etc/cloud/cloud.cfg
+
+cat <<EOF >> /etc/cloud/cloud.cfg
+runcmd:
+- sed -i'.orig' -e's/without-password/yes/' /etc/ssh/sshd_config
+- service sshd restart
+EOF
+
