@@ -1,7 +1,7 @@
 {
     "variables": {
         "password": "Password123",
-        "disk_size": "61440"
+	"disk_size": 0
     },
 
     "builders": [
