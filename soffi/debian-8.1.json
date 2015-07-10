@@ -9,7 +9,7 @@
     "builders":
     [
         {
-            "name": "debian81",
+            "name": "debian-8.1",
 
             "type": "qemu",
             "format": "qcow2",
@@ -53,10 +53,10 @@
             "type": "shell",
             "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
             "scripts": [
-                "scripts/update.sh",
-                "scripts/packages.sh",
-		"scripts/cloudstack.sh",
-                "scripts/cleanup.sh"
+                "debian-8.1/scripts/update.sh",
+                "debian-8.1/scripts/packages.sh",
+		"debian-8.1/scripts/cloudstack.sh",
+                "debian-8.1/scripts/cleanup.sh"
             ]
         }
     ]
