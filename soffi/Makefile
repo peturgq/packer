@@ -1,20 +1,25 @@
 #disk_size=10
 # 10 gigs
-#disk_size=10240
+disk_size=10240
 # 60 gigs
 #disk_size=61440
 # 320 gigs
-disk_size=327680
+#disk_size=327680
 
 do-it :
-	echo "Doing nothing, consider making: windows"
+	@echo "Doing nothing, these are the targets available"
+	@grep '^[^#[:space:]].*:' Makefile
 
 debian-8_1:
-	rm -rf builds/qemu/coreos*
+	rm -rf output-debian-8.1
 	packer build \
 	-var 'disk_size=$(disk_size)' \
 	debian-8.1.json
-
+windows-2012-standard-r2:
+	rm -rf output-debian-8.1
+	packer build \
+	-var 'disk_size=$(disk_size)' \
+	windows-2012-standard.r2.json
 
 
 

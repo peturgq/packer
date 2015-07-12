@@ -6,7 +6,7 @@
 
     "builders": [
         {
-            "name": "windows-2012R2",
+            "name": "windows-2012-standard.r2",
 
             "type": "qemu",
             "format":"qcow2",
@@ -26,9 +26,9 @@
             "boot_wait": "2s",
 
             "floppy_files": [
-                "floppy/drivers/virtio-win-0.1-81/WIN7/AMD64/*",
-                "floppy/common/*",
-                "floppy/windows-2012-standard-amd64/*"
+                "windows-2012-standard.r2/floppy/drivers/virtio-win-0.1-81/WIN7/AMD64/*",
+                "windows-2012-standard.r2/floppy/common/*",
+                "windows-2012-standard.r2/floppy/windows-2012-standard-amd64/*"
             ]
         }
     ],
@@ -41,7 +41,7 @@
 
         {
             "type": "file",
-            "source": "files/cloud-instance-manager.reg",
+            "source": "windows-2012-standard.r2/files/cloud-instance-manager.reg",
             "destination": "cloud-instance-manager.reg"
         },
 
@@ -50,12 +50,12 @@
             "remote_path": "/cygdrive/c/Windows/Temp/script.bat",
             "execute_command": "cmd /c C:/Windows/Temp/script.bat",
             "scripts": [
-                "scripts/enable-rdp.bat",
-                "scripts/execution-policy-unrestricted.bat",
-                "scripts/unlimited-password-expiration.bat",
-		"scripts/cloudstack.bat",
-		"scripts/firewall-open-ping.bat",
-		"scripts/firewall-open-rdp.bat"
+                "windows-2012-standard.r2/scripts/enable-rdp.bat",
+                "windows-2012-standard.r2/scripts/execution-policy-unrestricted.bat",
+                "windows-2012-standard.r2/scripts/unlimited-password-expiration.bat",
+		"windows-2012-standard.r2/scripts/cloudstack.bat",
+		"windows-2012-standard.r2/scripts/firewall-open-ping.bat",
+		"windows-2012-standard.r2/scripts/firewall-open-rdp.bat"
             ]
         }
     ]

@@ -7,7 +7,9 @@
 disk_size=327680
 
 do-it :
-	echo "Doing nothing, consider making: windows"
+	echo "Doing nothing, consider making: windows-2012-R2-standard-amd64"
+	echo "you can pass in vars like:"
+	echo "disk_size="
 
 windows-2012-R2-standard-amd64:
 	rm -rf builds/qemu/coreos*
