@@ -1,5 +1,6 @@
 {
     "variables": {
+	"image_basename": "windows-2012-standard.r2",
         "password": "Password123",
 	"disk_size": 0
     },
@@ -10,10 +11,11 @@
 
             "type": "qemu",
             "format":"qcow2",
+	"vm_name": "{{user `image_basename`}}-{{user `disk_size`}}",
             "accelerator": "kvm",
             "disk_size": "{{ user `disk_size`}}",
             "disk_interface":"virtio",
-            "iso_url": "http://images.greenqloud.com/en_windows_server_2012_r2_x64_dvd_2707946.iso",
+            "iso_url": "http://images.qstack.com/en_windows_server_2012_r2_x64_dvd_2707946.iso",
             "iso_checksum_type": "md5",
             "iso_checksum": "0e7c09aab20dec3cd7eab236dab90e78",
 
@@ -29,7 +31,8 @@
                 "windows-2012-standard.r2/floppy/drivers/virtio-win-0.1-81/WIN7/AMD64/*",
                 "windows-2012-standard.r2/floppy/common/*",
                 "windows-2012-standard.r2/floppy/windows-2012-standard-amd64/*"
-            ]
+            ],
+	"output_directory": "output-{{user `image_basename`}}"
         }
     ],
 
