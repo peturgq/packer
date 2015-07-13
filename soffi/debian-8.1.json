@@ -1,5 +1,6 @@
 {
   "variables": {
+    "image_basename": "debian-8.1",
     "user": "admindebian",
     "password": "admindebian",
     "disk_size": 10000,
@@ -7,9 +8,9 @@
   },
   "builders": [
     {
-      "name": "debian-8.1",
       "type": "qemu",
       "format": "qcow2",
+	"vm_name": "{{user `image_basename`}}-{{user `disk_size`}}",
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size`}}",
       "iso_url": "http://ftp.is.debian.org/debian-cd/8.1.0/amd64/iso-cd/debian-8.1.0-amd64-netinst.iso",
@@ -34,7 +35,8 @@
         "passwd/user-password-again={{user `password`}} ",
         "passwd/username={{user `user`}} ",
         "<enter>"
-      ]
+      ],
+	"output_directory": "output-{{user `image_basename`}}"
     }
   ],
   "provisioners": [
