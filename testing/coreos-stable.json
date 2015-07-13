@@ -1,63 +1,68 @@
 {
-        "variables": {
-                "image_basename": "coreos-stable",
-                "disk_size": "320",
-                "ssh_username": "core",
-                "channel": "stable",
-                "version": "current",
-                "ISO": "coreos_production_iso_image.iso",
-                "ISO_CHECKSUM": "39074d0233c48ca199b987a0944fdda2",
-                "ISO_CHECKSUM_TYPE": "md5"
-        },
-        "builders": [
-                {
-                        "type": "qemu",
-                        "qemuargs": [
-                          [ "-m", "1024" ]
-                        ],
-                        "accelerator": "kvm",
-                        "format": "qcow2",
-                        "vm_name": "{{user `image_basename`}}-{{user `disk_size`}}",
-                        "boot_wait": "60s",
-                        "shutdown_command": "sudo -S shutdown -P now",
-                        "iso_urls":[
-                                "../iso/{{user `ISO`}}",
-                                "http://{{user `channel`}}.release.core-os.net/amd64-usr/{{user `version`}}/{{user `ISO`}}"
-                        ],
-                        "iso_checksum": "{{user `ISO_CHECKSUM`}}",
-                        "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
-                        "http_directory": "coreos-stable/http",
-                        "http_port_min": 10082,
-                        "http_port_max": 10089,
-                        "ssh_username": "{{user `ssh_username`}}",
-                        "ssh_key_path": "coreos-stable/http/packer_id_rsa",
-                        "ssh_port": 22,
-                        "ssh_wait_timeout": "2h",
-                        "ssh_host_port_min": 2222,
-                        "ssh_host_port_max": 2229,
-                        "headless": true,
-                        "vnc_port_min": 5900,
-                        "vnc_port_max": 5910,
-                        "net_device": "virtio-net",
-                        "disk_interface": "virtio",
-                        "disk_size": "{{user `disk_size`}}000",
-			"boot_command": [
-			    "<enter>sudo -i<enter>",
-			    "systemctl stop sshd.socket<enter>",
-                            "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/install.yml<enter>",
-			    "coreos-install -V {{user `version`}} -d /dev/vda -C {{user `channel`}} -c install.yml<enter>",
-                            "reboot<enter>"
-			],
-                        "output_directory": "builds/qemu/{{user `image_basename`}}/{{user `image_basename`}}-{{user `disk_size`}}"
-                }
-        ],
-
-"provisioners": [
-        {
-          "only": ["qemu"],
-          "type": "shell",
-          "scripts": ["coreos-stable/scripts/post-install.sh"]
-        }
-    ]
-
+  "variables": {
+    "image_basename": "coreos-stable",
+    "disk_size": "320",
+    "ssh_username": "core",
+    "channel": "stable",
+    "version": "current",
+    "ISO": "coreos_production_iso_image.iso",
+    "ISO_CHECKSUM": "39074d0233c48ca199b987a0944fdda2",
+    "ISO_CHECKSUM_TYPE": "md5"
+  },
+  "builders": [
+    {
+      "type": "qemu",
+      "qemuargs": [
+        [
+          "-m",
+          "1024"
+        ]
+      ],
+      "accelerator": "kvm",
+      "format": "qcow2",
+      "vm_name": "{{user `image_basename`}}-{{user `disk_size`}}",
+      "boot_wait": "60s",
+      "shutdown_command": "sudo -S shutdown -P now",
+      "iso_urls": [
+        "../iso/{{user `ISO`}}",
+        "http://{{user `channel`}}.release.core-os.net/amd64-usr/{{user `version`}}/{{user `ISO`}}"
+      ],
+      "iso_checksum": "{{user `ISO_CHECKSUM`}}",
+      "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
+      "http_directory": "coreos-stable/http",
+      "http_port_min": 10082,
+      "http_port_max": 10089,
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_key_path": "coreos-stable/http/packer_id_rsa",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "2h",
+      "ssh_host_port_min": 2222,
+      "ssh_host_port_max": 2229,
+      "headless": true,
+      "vnc_port_min": 5900,
+      "vnc_port_max": 5910,
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "disk_size": "{{user `disk_size`}}000",
+      "boot_command": [
+        "<enter>sudo -i<enter>",
+        "systemctl stop sshd.socket<enter>",
+        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/install.yml<enter>",
+        "coreos-install -V {{user `version`}} -d /dev/vda -C {{user `channel`}} -c install.yml<enter>",
+        "reboot<enter>"
+      ],
+      "output_directory": "output-{{user `image_basename`}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "only": [
+        "qemu"
+      ],
+      "type": "shell",
+      "scripts": [
+        "coreos-stable/scripts/post-install.sh"
+      ]
+    }
+  ]
 }
