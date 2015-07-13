@@ -16,7 +16,7 @@ debian-8_1:
 	-var 'disk_size=$(disk_size)' \
 	debian-8.1.json
 windows-2012-standard-r2:
-	rm -rf output-debian-8.1
+	rm -rf output-windows-2012-standard.r2
 	packer build \
 	-var 'disk_size=$(disk_size)' \
 	windows-2012-standard.r2.json
