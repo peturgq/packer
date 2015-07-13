@@ -6,7 +6,7 @@
                 "channel": "stable",
                 "version": "current",
                 "ISO": "coreos_production_iso_image.iso",
-                "ISO_CHECKSUM": "7c9059b9d23ab2f7dce617db26cff3a8",
+                "ISO_CHECKSUM": "39074d0233c48ca199b987a0944fdda2",
                 "ISO_CHECKSUM_TYPE": "md5"
         },
         "builders": [
@@ -26,11 +26,11 @@
                         ],
                         "iso_checksum": "{{user `ISO_CHECKSUM`}}",
                         "iso_checksum_type": "{{user `ISO_CHECKSUM_TYPE`}}",
-                        "http_directory": "http_directory/coreos",
+                        "http_directory": "coreos-stable/http",
                         "http_port_min": 10082,
                         "http_port_max": 10089,
                         "ssh_username": "{{user `ssh_username`}}",
-                        "ssh_key_path": "http_directory/coreos/packer_id_rsa",
+                        "ssh_key_path": "coreos-stable/http/packer_id_rsa",
                         "ssh_port": 22,
                         "ssh_wait_timeout": "2h",
                         "ssh_host_port_min": 2222,
@@ -56,7 +56,7 @@
         {
           "only": ["qemu"],
           "type": "shell",
-          "scripts": ["provisions/coreos/post-install.sh"]
+          "scripts": ["coreos-stable/scripts/post-install.sh"]
         }
     ]
 
