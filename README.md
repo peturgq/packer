@@ -12,6 +12,12 @@ GreenQloud's Packer Templates is a project that encapsulates [Packer](http://pac
 Packer validate: `packer validate template.json`
 
 Packer debug and logging: `. debug.rc` (in project's main directory)
+#!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export PACKER_LOG=info
+#export PACKER_LOG_PATH=${DIR}/packer.log
+
+
 
 Packer build template: `packer build template.json` (make is often a better option)
 
