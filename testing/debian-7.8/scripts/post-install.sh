@@ -51,5 +51,9 @@ rmdir /root/.aptitude
 rm /root/.bash_history 
 rm /root/.viminfo 
 
+# fill disk with zeroes and delete them
+dd if=/dev/zero of=/EMPTY bs=1M
+rm -rf /EMPTY
+
 history -c
 
