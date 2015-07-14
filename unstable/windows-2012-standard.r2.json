@@ -8,7 +8,7 @@
       "iso_checksum": "0e7c09aab20dec3cd7eab236dab90e78",
 	"ssh_username": "Administrator",
       "ssh_password": "Administrator",
-      "ssh_wait_timeout": "30m"
+      "ssh_wait_timeout": "90m"
   },
   "builders": [
     {
@@ -44,9 +44,28 @@
 	"remote_username": "root",
 	"remote_password": "password",
 	"ssh_username": "{{user `ssh_username`}}",
+	      "ssh_wait_timeout": "90m",
 	"iso_checksum_type": "{{user `iso_checksum_type`}}",
 	"iso_checksum": "{{user `iso_checksum`}}",
-	"iso_url": "{{user `iso_url`}}"
+	"iso_url": "{{user `iso_url`}}",
+"floppy_files": [
+        "windows-2012-standard.r2/floppy/common/*",
+        "windows-2012-standard.r2/floppy/windows-2012-standard-amd64/*"
+      ],
+"vmx_data":{
+        "ethernet0.networkName": "VM Network",
+        "ethernet0.present": "TRUE",
+        "ethernet0.startConnected": "TRUE",
+        "ethernet0.virtualDev": "e1000",
+        "ethernet0.addressType": "generated",
+        "ethernet0.generatedAddressOffset": "0",
+        "ethernet0.wakeOnPcktRcv": "FALSE",
+	"scsi0.virtualDev": "lsisas1068",
+	  "memsize": "16384",
+        "numvcpus": "4",
+        "cpuid.coresPerSocket": "1"
+	
+      }
 	
 	}
   ],
