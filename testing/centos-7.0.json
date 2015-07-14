@@ -1,6 +1,6 @@
 {
   "variables": {
-	"image_basename": "centos-7.0",
+    "image_basename": "centos-7.0",
     "user": "root",
     "password": "root",
     "disk_size": 10,
@@ -13,10 +13,10 @@
       "iso_checksum": "111379a06402e1e445c6aeee9401d031",
       "iso_url": "http://fedora.is/CentOS/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
       "type": "qemu",
-	"format": "qcow2",
+      "format": "qcow2",
       "vm_name": "{{user `image_basename`}}-{{user `disk_size`}}",
       "accelerator": "kvm",
-	"disk_size": "{{ user `disk_size`}}",
+      "disk_size": "{{ user `disk_size`}}",
       "qemuargs": [
         [
           "-m",
@@ -32,7 +32,7 @@
         "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
       ],
       "shutdown_command": "echo '{{user `password`}}'|sudo -S shutdown -h now",
-	"output_directory": "output-{{user `image_basename`}}"
+      "output_directory": "output-{{user `image_basename`}}"
     }
   ],
   "provisioners": [
