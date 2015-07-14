@@ -23,6 +23,13 @@ centos-7_0:
 	centos-7.0.json
 	find output-centos-7.0/centos-7.0-$(disk_size)* -name *.qcow2 | xargs -I'{}' qemu-img convert -f qcow2 -O qcow2 '{}' '{}-new'
 	find output-centos-7.0/centos-7.0-$(disk_size)* -name *.qcow2 | xargs -I'{}' mv '{}'-new '{}'
+debian-7_8:
+	rm -Rf output-debian-7.8
+	packer build \
+	-var 'disk_size=$(disk_size)' \
+	debian-7.8.json
+	find output-debian-7.8/debian-7.8-$(disk_size)* -name *.qcow2 | xargs -I'{}' qemu-img convert -f qcow2 -O qcow2 '{}' '{}-new'
+	find output-debian-7.8/debian-7.8-$(disk_size)* -name *.qcow2 | xargs -I'{}' mv '{}'-new '{}'
 
 
 
