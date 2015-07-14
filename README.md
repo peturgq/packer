@@ -5,104 +5,41 @@ Packer Templates
 
 *GreenQloud provides no official support for this community repository*
 
-GreenQloud's Packer Templates is a project that encapsulates [Packer](http://packer.io) templates for building virtual machine images for QStack. There are also templates for creating [Vagrant](http://vagrantup.com) baseboxes, which are used for testing Single Node Developer Setups.
-
-# Useful commands
-
-Packer validate: `packer validate template.json`
-
-Packer debug and logging: `. debug.rc` (in project's main directory)
-#!/bin/bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export PACKER_LOG=info
-#export PACKER_LOG_PATH=${DIR}/packer.log
+GreenQloud's Packer Templates is a project that encapsulates [Packer](http://packer.io) templates for building virtual machine images for QStack. 
 
 
+# Requirements
 
-Packer build template: `packer build template.json` (make is often a better option)
+You need
 
-Packer build with specified builder: `packer build -only=vmware-iso template.json`
+* qemu
+* packer
 
-# QStack
+We have tested only on Debian 7, but you should get the same results anywhere if using latest stables of qemu and packer
 
-The virtual machine images built for QStack are currently made for two types of hypervisors; QEMU/KVM and VMWare.
 
-## Templates
+# Stable templates
 
-The QStack templates are located under `cloudstack`. The linux templates all have their JSON files in this directory.
+go the the `stable` directory and issue `make`.  You will get a list of templates available and you can build them by issuing `make <templatename>-version_minorversion`
 
-The Windows 2012 R2 template is located in a self contained directory `cloudstack/windows`.
+The finished template will be placed in a new directory called `output-<templatename>-version_minorversion`
 
-### Windows 2012 R2
+### disk size
 
-Builders: QEMU
+You can control the disk size of the produced template by setting the `disk_size` parameter, for example: `make debian-8_1 disk_size=61440` (this would produce a 60GB template)
 
-See readme in `cloudstack/windows`.
+# "testing" templates
 
-### Windows 2008 r2 Datacenter
-
-Builders: QEMU, VMware
-
-VMware: `make windows-2008-r2-vmware`
-
-QEMU: `make windows-2008-r2-qemu` Not implemented yet.
-
-### CentOS 6.5
-
-Builders: QEMU, VMware
-
-QEMU: `make centos-6.5-qemu`
-
-VMware: `make centos-6.5-vmware`
-
-# Vagrant
-
-Current developer baseboxes include chef, and depending on the version an upgraded
-kernel, dependencies already installed.
-
-### Raw Baseboxes
-
-Baseboxes that come with chef.
-
-gqdev_centos-6.5_chef_latest.box
-
-### Raw Baseboxes with upgraded kernel
-
-Baseboxes used for testing chef recipies come with Linux kernel 3.10.
-
-gqdev_centos-6.5_kernel-3.10.box
-
-### Basebox with dependencies.
-
-Baseboxes used for testing QStack.
-
-gqdev_centos-6.5_cs-base.box
-
-### Basebox with dependencies and QStack already setup. (Future Option)
-
-Basically a QStack installation in a box, combined with upgrade scripts this could be used to get a development environment setup with little effort.
-
-gqdev_centos-6.5_cs-full.box
-
-## Build Your Own Boxes
-
-First, install [Packer](http://packer.io) and then clone this project.
-
-Inside the `packer` directory, a JSON file describes each box that can be built. You can use `packer build` to build the
-boxes.
-
-    $ packer build centos-6.5-x86_64.json
-
-If you want to use a another mirror site, use mirror variable.
-
-    $ packer build -var 'mirror=http://fedora.is/CentOS' debian-7.2.0-i386.json
+These templates work the same way as the ones in the *stable* directory, although they have not been polished.
 
 
 # License & Authors
 
 - Author: Jon Thor Kristinsson (<jon@greenqloud.com>)
 - Author: Jordi Amorós (<jordi@greenqloud.com>)
+- Author: Kristinn Soffanías Rúnarsson (<soffi@greenqloud.com>)
+
 
 ```text
-Copyright 2014, Greenqloud (<support@greenqloud.com>)
+Copyright 2015, Greenqloud (<support@greenqloud.com>)
 ```
