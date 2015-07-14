@@ -1,0 +1,47 @@
+{
+  "variables": {
+	"image_basename": "centos-7.0",
+    "user": "root",
+    "password": "root",
+    "disk_size": 10,
+    "domain": ""
+  },
+  "builders": [
+    {
+      "name": "centos7.0",
+      "iso_checksum_type": "md5",
+      "iso_checksum": "111379a06402e1e445c6aeee9401d031",
+      "iso_url": "http://fedora.is/CentOS/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
+      "type": "qemu",
+	"format": "qcow2",
+      "vm_name": "{{user `image_basename`}}-{{user `disk_size`}}",
+      "accelerator": "kvm",
+	"disk_size": "{{ user `disk_size`}}",
+      "qemuargs": [
+        [
+          "-m",
+          "4096M"
+        ]
+      ],
+      "ssh_password": "root",
+      "ssh_username": "root",
+      "ssh_wait_timeout": "50000s",
+      "headless": "true",
+      "http_directory": "centos-7.0/http",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+      ],
+      "shutdown_command": "echo '{{user `password`}}'|sudo -S shutdown -h now",
+	"output_directory": "output-{{user `image_basename`}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "scripts": [
+        "centos-7.0/scripts/cleanup.sh"
+      ],
+      "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'"
+    }
+  ]
+}
