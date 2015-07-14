@@ -50,6 +50,14 @@ Current "testing" templates:
 This has old deprecated stuff and is only here for historical (hysterical?) reasons.  This might be deleted at any moment.
 
 
+# Registering templates in QStack
+
+You can register them via the admin panel as described in the documentation, or via cloudmonkey
+
+	# find ostypes
+	cloudmonkey list ostypes
+	cloudmonkey register template name="Debian 8.1 10GB" displaytext="Debian 8.1 10GB" zoneid=be25c4af-5c73-437c-9506-4cccc9aa5d52 hypervisor="kvm" format="qcow2" ostypeid=49759e4c-2a2c-11e5-b8ff-0242ac110007 bits=64 url="http://server.with.images/debian-8.1-10240.qcow2" ispublic=true isfeatured=true
+
 # License & Authors
 
 - Author: Jon Thor Kristinsson (<jon@greenqloud.com>)
