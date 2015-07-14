@@ -43,7 +43,7 @@
       "vnc_port_max": 5910,
       "net_device": "virtio-net",
       "disk_interface": "virtio",
-      "disk_size": "{{user `disk_size`}}000",
+      "disk_size": "{{user `disk_size`}}",
       "boot_command": [
         "<enter>sudo -i<enter>",
         "systemctl stop sshd.socket<enter>",
