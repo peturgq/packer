@@ -3,30 +3,30 @@
     "image_basename": "windows-2012-standard.r2",
     "password": "Password123",
     "disk_size": 0,
-	"iso_url": "http://images.qstack.com/ISO/en_windows_server_2012_r2_x64_dvd_2707946.iso",
-	"iso_checksum_type": "md5",
-      "iso_checksum": "0e7c09aab20dec3cd7eab236dab90e78",
-	"ssh_username": "Administrator",
-      "ssh_password": "Administrator",
-      "ssh_wait_timeout": "90m"
+    "iso_url": "http://images.qstack.com/ISO/en_windows_server_2012_r2_x64_dvd_2707946.iso",
+    "iso_checksum_type": "md5",
+    "iso_checksum": "0e7c09aab20dec3cd7eab236dab90e78",
+    "ssh_username": "Administrator",
+    "ssh_password": "Administrator",
+    "ssh_wait_timeout": "90m",
+    "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
   },
   "builders": [
     {
-      "name": "windows-2012-standard.r2-qemu",
       "type": "qemu",
       "format": "qcow2",
       "vm_name": "{{user `image_basename`}}-{{user `disk_size`}}",
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size`}}",
       "disk_interface": "virtio",
-      "iso_url": "http://images.qstack.com/ISO/en_windows_server_2012_r2_x64_dvd_2707946.iso",
-      "iso_checksum_type": "md5",
-      "iso_checksum": "0e7c09aab20dec3cd7eab236dab90e78",
-      "ssh_username": "Administrator",
-      "ssh_password": "Administrator",
-      "ssh_wait_timeout": "30m",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_wait_timeout": "{{user `ssh_wait_timeout`}}",
       "headless": true,
-      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "shutdown_command": "{{user `shutdown_command`}}",
       "boot_wait": "2s",
       "floppy_files": [
         "windows-2012-standard.r2/floppy/drivers/virtio-win-0.1-81/WIN7/AMD64/*",
@@ -35,39 +35,40 @@
       ],
       "output_directory": "output-{{user `image_basename`}}"
     },
-	{
-	"name": "windows-2012-standard.r2-vmware-iso",
-	"type": "vmware-iso",
-	"remote_type": "esx5",
-	"remote_host": "192.168.201.58",
-	"tools_upload_flavor": "windows",
-	"remote_username": "root",
-	"remote_password": "password",
-	"ssh_username": "{{user `ssh_username`}}",
-	      "ssh_wait_timeout": "90m",
-	"iso_checksum_type": "{{user `iso_checksum_type`}}",
-	"iso_checksum": "{{user `iso_checksum`}}",
-	"iso_url": "{{user `iso_url`}}",
-"floppy_files": [
+    {
+      "vm_name": "{{user `image_basename`}}-{{user `disk_size`}}-vmware",
+      "type": "vmware-iso",
+      "remote_type": "esx5",
+      "remote_host": "192.168.201.58",
+      "tools_upload_flavor": "windows",
+      "remote_username": "root",
+      "remote_password": "password",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_wait_timeout": "{{user `ssh_wait_timeout`}}",
+      "shutdown_command": "{{user `shutdown_command`}}",
+      "floppy_files": [
         "windows-2012-standard.r2/floppy/common/*",
         "windows-2012-standard.r2/floppy/windows-2012-standard-amd64/*"
       ],
-"vmx_data":{
+      "vmx_data": {
         "ethernet0.networkName": "VM Network",
         "ethernet0.present": "TRUE",
         "ethernet0.startConnected": "TRUE",
         "ethernet0.virtualDev": "e1000",
         "ethernet0.addressType": "generated",
-        "ethernet0.generatedAddressOffset": "0",
-        "ethernet0.wakeOnPcktRcv": "FALSE",
-	"scsi0.virtualDev": "lsisas1068",
-	  "memsize": "16384",
-        "numvcpus": "4",
-        "cpuid.coresPerSocket": "1"
-	
-      }
-	
-	}
+        "scsi0.virtualDev": "lsisas1068",
+        "memsize": "4096",
+        "numvcpus": "1",
+        "cpuid.coresPerSocket": "1",
+        "guestOS": "windows8srv-64",
+        "virtualHW.version": "8"
+      },
+      "output_directory": "output-{{user `image_basename`}}"
+    }
   ],
   "provisioners": [
     {
