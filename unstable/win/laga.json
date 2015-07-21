@@ -1,0 +1,55 @@
+{
+  "builders": [
+    {
+      "type": "qemu",
+      "qemuargs": [
+        [
+          "-m",
+          "4096"
+        ]
+      ],
+      "format": "qcow2",
+      "accelerator": "kvm",
+      "disk_interface": "virtio",
+	 "iso_url": "http://images.qstack.com/ISO/en_windows_server_2012_r2_x64_dvd_2707946.iso",
+    "iso_checksum_type": "md5",
+    "iso_checksum": "0e7c09aab20dec3cd7eab236dab90e78",
+      "headless": true,
+      "boot_wait": "2s",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "10h",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "disk_size": 61440,
+      "vnc_port_min": 5900,
+      "vnc_port_max": 5980,
+      "floppy_files": [
+	"./drivers/*",
+        "./answer_files/Autounattend.xml",
+        "./scripts/microsoft-updates.bat",
+        "./scripts/win-updates.ps1",
+        "./scripts/openssh.ps1",
+        "./scripts/cloudstack.ps1"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "remote_path": "/tmp/script.bat",
+      "execute_command": "{{.Vars}} cmd /c C:/Windows/Temp/script.bat",
+      "scripts": [
+        "./scripts/enable-rdp.bat",
+        "./scripts/compile-dotnet-assemblies.bat",
+        "./scripts/disable-auto-logon.bat",
+        "./scripts/compact.bat"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "rm -rf /tmp/*"
+      ]
+    }
+  ]
+}
