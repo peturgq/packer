@@ -20,7 +20,7 @@
       "ssh_password": "Password123",
       "ssh_wait_timeout": "10h",
 	"shutdown_command": "c:/windows/system32/sysprep/sysprep.exe /generalize /oobe /quiet /shutdown /unattend:a:/sysprep.xml",
-      "disk_size": 61440,
+      "disk_size": 20480,
       "vnc_port_min": 5900,
       "vnc_port_max": 5980,
       "floppy_files": [

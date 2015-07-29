@@ -6,7 +6,7 @@ Write-Output "AutoStart: $AutoStart"
 $is_64bit = [IntPtr]::size -eq 8
 
 # setup cloudagent
-$cloudagent_download_url = "http://images.greenqloud.com/CloudInstanceManager.msi"
+$cloudagent_download_url = "http://images.qstack.com/win/CloudInstanceManager.msi"
 
 if (!(Test-Path "C:\Windows\Temp\CloudInstanceManager.msi")) {
     Write-Output "Downloading $cloudagent_download_url"

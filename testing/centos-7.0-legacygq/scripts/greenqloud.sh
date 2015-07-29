@@ -8,10 +8,11 @@ echo "sh -c 'setterm -blank 0 -powersave off -powerdown 0 < /dev/console > /dev/
 #fix ec2-metadata
 echo "NOZEROCONF=yes" >> /etc/sysconfig/network
 
-wget http://s.greenqloud.com/template-scripts/centos/6.0/init.d/gq-create-ssh-keys -O /etc/rc.d/init.d/gq-create-ssh-keys
-wget http://s.greenqloud.com/template-scripts/debian/7/baremetal/gq-get-passwd -O /etc/rc.d/init.d/gq-get-passwd
-wget http://s.greenqloud.com/template-scripts/debian/7/baremetal/gq-get-ssh-keys -O /etc/rc.d/init.d/gq-get-ssh-keys
-wget http://s.greenqloud.com/template-scripts/debian/7/baremetal/gq-get-userdata -O /etc/rc.d/init.d/gq-get-userdata
+wget http://s.greenqloud.com/template-scripts/qstack-agents/gq-create-ssh-keys -O /etc/rc.d/init.d/gq-create-ssh-keys
+wget http://s.greenqloud.com/template-scripts/qstack-agents/gq-get-passwd -O /etc/rc.d/init.d/gq-get-passwd
+wget http://s.greenqloud.com/template-scripts/qstack-agents/gq-get-ssh-keys -O /etc/rc.d/init.d/gq-get-ssh-keys
+wget http://s.greenqloud.com/template-scripts/qstack-agents/gq-get-userdata -O /etc/rc.d/init.d/gq-get-userdata
+
 
 chmod 755 /etc/rc.d/init.d/gq-create-ssh-keys
 chmod 755 /etc/rc.d/init.d/gq-get-passwd
