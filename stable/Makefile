@@ -6,7 +6,7 @@ do-it :
 	@grep '^[^#[:space:]].*:' Makefile
 	@echo " "
 	@echo "disk_size:"
-	@echo "10 gigs=10240 (default), 60 gigs=61440, 320 gigs=327680"
+	@echo "10 gigs=10240 (default), 40 gigs=40960, 60 gigs=61440, 320 gigs=327680"
 
 debian-8_1:
 	rm -rf output-debian-8.1

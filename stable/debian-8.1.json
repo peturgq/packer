@@ -3,7 +3,7 @@
     "image_basename": "debian-8.1",
     "user": "admindebian",
     "password": "admindebian",
-    "disk_size": 10000,
+    "disk_size": "10000",
     "domain": ""
   },
   "builders": [
@@ -19,6 +19,7 @@
       "http_directory": "debian-8.1/http",
       "ssh_username": "{{user `user`}}",
       "ssh_password": "{{user `password`}}",
+	"ssh_wait_timeout": "30m",
       "headless": true,
       "shutdown_command": "echo '{{user `password`}}'|sudo -S shutdown -h now",
       "boot_wait": "4s",
