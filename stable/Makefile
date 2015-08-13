@@ -13,8 +13,7 @@ debian-8_1:
 	packer build \
 	-var 'disk_size=$(disk_size)' \
 	debian-8.1.json
-	find output-debian-8.1/debian-8.1-$(disk_size)* -name *.qcow2 | xargs -I'{}' qemu-img convert -f qcow2 -O qcow2 '{}' '{}-new'
-	find output-debian-8.1/debian-8.1-$(disk_size)* -name *.qcow2 | xargs -I'{}' mv '{}'-new '{}'
+	find output-debian-8.1/debian-8.1-$(disk_size)* -name debian-8.1-$(disk_size)* | xargs -I'{}' qemu-img convert -f qcow2 -O qcow2 '{}' '{}.qcow2'
 windows-2012-standard-r2:
 	rm -rf output-windows-2012-standard.r2
 	# we need 'todos' because windows installer freaks out about unix line-endings in INF files..
@@ -29,15 +28,13 @@ ubuntu-14_04:
 	packer build \
 	-var 'disk_size=$(disk_size)' \
 	ubuntu-14.04.json
-	find output-ubuntu-14.04/ubuntu-14.04-$(disk_size)* -name *.qcow2 | xargs -I'{}' qemu-img convert -f qcow2 -O qcow2 '{}' '{}-new'
-	find output-ubuntu-14.04/ubuntu-14.04-$(disk_size)* -name *.qcow2 | xargs -I'{}' mv '{}'-new '{}'
+	find output-ubuntu-14.04/ubuntu-14.04-$(disk_size)* -name ubuntu-14.04-$(disk_size)* | xargs -I'{}' qemu-img convert -f qcow2 -O qcow2 '{}' '{}.qcow2'
 ubuntu-15_04:
 	rm -rf output-ubuntu-15.04
 	packer build \
 	-var 'disk_size=$(disk_size)' \
 	ubuntu-15.04.json
-	find output-ubuntu-15.04/ubuntu-15.04-$(disk_size)* -name *.qcow2 | xargs -I'{}' qemu-img convert -f qcow2 -O qcow2 '{}' '{}-new'
-	find output-ubuntu-15.04/ubuntu-15.04-$(disk_size)* -name *.qcow2 | xargs -I'{}' mv '{}'-new '{}'
+	find output-ubuntu-15.04/ubuntu-15.04-$(disk_size)* -name ubuntu-15.04-$(disk_size)* | xargs -I'{}' qemu-img convert -f qcow2 -O qcow2 '{}' '{}.qcow2'
 
 
 
