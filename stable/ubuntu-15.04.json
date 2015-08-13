@@ -3,7 +3,7 @@
     "image_basename": "ubuntu-15.04",
     "user": "adminubuntu",
     "password": "adminubuntu",
-    "disk_size": 10000
+    "disk_size": "10000"
   },
   "builders": [
     {

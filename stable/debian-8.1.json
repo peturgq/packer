@@ -2,7 +2,7 @@
   "variables": {
     "image_basename": "debian-8.1",
     "user": "admindebian",
-    "password": "admindebian",
+    "password": "604cf6641d628c3351db79726a4ba80f604cf6641d628c3351db79726a4ba80f9f89d6959c68f92d6f23e66c103a0efd",
     "disk_size": "10000",
     "domain": ""
   },
@@ -21,7 +21,7 @@
       "ssh_password": "{{user `password`}}",
 	"ssh_wait_timeout": "30m",
       "headless": true,
-      "shutdown_command": "echo '{{user `password`}}'|sudo -S shutdown -h now",
+      "shutdown_command": "echo '{{user `password`}}'|sudo -S shutdown -h now & sudo passwd -l admindebian",
       "boot_wait": "4s",
       "boot_command": [
         "<esc><wait><wait>",
