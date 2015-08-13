@@ -68,6 +68,12 @@ Current "testing" templates:
 
 This has old deprecated stuff and is only here for historical (hysterical?) reasons.  This might be deleted at any moment.
 
+# Quick testing of template
+
+To see if the template boots and does most of what you want to do, you can run it on your packer server to do a quick glance through VNC, before registering and testing in QStack
+
+	qemu-system-x86_64 -device virtio-net -drive file=debian-8.1-10240.qcow2,if=virtio,cache=writeback,discard=ignore -boot once=d -name test -machine type=pc,accel=kvm -m 4096M -vnc 0.0.0.0:1
+
 
 # Registering templates in QStack
 
