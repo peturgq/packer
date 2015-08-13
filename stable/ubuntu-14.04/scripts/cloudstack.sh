@@ -7,3 +7,7 @@ datasource_list:
 EOF
 sed -i 's/set-passwords/[ set-passwords, always ]/' /etc/cloud/cloud.cfg
 sed -i 's/lock_passwd: True/lock_passwd: False/' /etc/cloud/cloud.cfg
+cat <<EOF >> /etc/cloud/cloud.cfg
+runcmd:
+- userdel -r adminubuntu
+EOF
