@@ -27,6 +27,7 @@ echo ssh_pwauth: True >> /etc/cloud/cloud.cfg
 
 cat <<EOF >> /etc/cloud/cloud.cfg
 runcmd:
+- userdel -r admindebian
 - sed -i'.orig' -e's/without-password/yes/' /etc/ssh/sshd_config
 - service sshd restart
 EOF
