@@ -3,7 +3,7 @@
     "image_basename": "centos-7.0",
     "user": "root",
     "password": "root",
-    "disk_size": 10,
+    "disk_size": "10",
     "domain": ""
   },
   "builders": [
@@ -31,7 +31,7 @@
       "boot_command": [
         "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
       ],
-      "shutdown_command": "echo '{{user `password`}}'|sudo -S shutdown -h now",
+      "shutdown_command": "shutdown -h now",
       "output_directory": "output-{{user `image_basename`}}"
     }
   ],
@@ -41,7 +41,7 @@
       "scripts": [
         "centos-7.0/scripts/cleanup.sh"
       ],
-      "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'"
+      "execute_command": "bash '{{.Path}}'"
     }
   ]
 }
