@@ -14,8 +14,7 @@ coreos-stable-qemu:
 	-only=qemu \
 	-var 'disk_size=$(disk_size)' \
 	coreos-stable.json
-	find output-coreos-stable/coreos-stable-$(disk_size)* -name *.qcow2 | xargs -I'{}' qemu-img convert -f qcow2 -O qcow2 '{}' '{}-new'
-	find output-coreos-stable/coreos-stable-$(disk_size)* -name *.qcow2 | xargs -I'{}' mv '{}'-new '{}'
+	find output-coreos-stable/coreos-stable-$(disk_size)* -name coreos-stable-$(disk_size)* | xargs -I'{}' qemu-img convert -f qcow2 -O qcow2 '{}' '{}.qcow2'
 centos-7_0:
 	rm -Rf output-centos-7.0
 	packer build \
