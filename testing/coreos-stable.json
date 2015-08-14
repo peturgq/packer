@@ -6,7 +6,7 @@
     "channel": "stable",
     "version": "current",
     "ISO": "coreos_production_iso_image.iso",
-    "ISO_CHECKSUM": "39074d0233c48ca199b987a0944fdda2",
+    "ISO_CHECKSUM": "0dd7086b7a169702242ad97a2f4758ec",
     "ISO_CHECKSUM_TYPE": "md5"
   },
   "builders": [
