@@ -21,3 +21,10 @@ sudo cp coreos-setup-environment /usr/share/oem/bin
 
 # remove the machine id. it will be regenerated on first boot.
 sudo rm -fr /etc/machine-id
+
+# nuke authorized_keys
+echo "nuking keys"
+sudo rm -Rf /home/core/.ssh/authorized_keys
+sudo rm -Rf /home/core/.ssh/authorized_keys.d/*
+echo "nuking userdata"
+sudo rm -Rf /var/lib/coreos-install/user_data
