@@ -33,7 +33,7 @@ You need
 We have tested only on Debian 7, but you should get the same results anywhere if using latest stables of qemu and packer
 
 
-# Stable templates
+# Stable templates (stable/)
 
 go the the `stable` directory and issue `make`.  You will get a list of templates available and you can build them by issuing `make <templatename>-version_minorversion`
 
@@ -50,7 +50,7 @@ Current stable templates:
 
 You can control the disk size of the produced template by setting the `disk_size` parameter, for example: `make debian-8_1 disk_size=61440` (this would produce a 60GB template)
 
-# "testing" templates
+# Not fully tested templates (testing/)
 
 These templates work the same way as the ones in the *stable* directory, although they have not been polished.  Go to the `testing` directory and you can `make` the templates.
 
@@ -59,6 +59,12 @@ Current "testing" templates:
 * CoreOS stable
 * Centos 7.0
 * Debian 7.8
+
+
+# Unstable templates (unstable/)
+
+These are templates that are works in progress and may not be working at all. They should absolutely not be used in production, pull requests are welcome.
+
 
 # "attic" directory
 
