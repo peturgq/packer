@@ -3,7 +3,7 @@
     "image_basename": "centos-7.0-legacygq",
     "user": "root",
     "password": "root",
-    "disk_size": "10",
+    "disk_size": "10240",
     "domain": ""
   },
   "builders": [

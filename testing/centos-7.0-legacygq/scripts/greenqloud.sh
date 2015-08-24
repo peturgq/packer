@@ -7,11 +7,13 @@ yum -y update
 echo "sh -c 'setterm -blank 0 -powersave off -powerdown 0 < /dev/console > /dev/console 2>&1'" >> /etc/rc.local
 #fix ec2-metadata
 echo "NOZEROCONF=yes" >> /etc/sysconfig/network
+#put time of build into /etc/build
+date --rfc-3339=seconds >> /etc/build
 
-wget http://s.greenqloud.com/template-scripts/qstack-agents/gq-create-ssh-keys -O /etc/rc.d/init.d/gq-create-ssh-keys
-wget http://s.greenqloud.com/template-scripts/qstack-agents/gq-get-passwd -O /etc/rc.d/init.d/gq-get-passwd
-wget http://s.greenqloud.com/template-scripts/qstack-agents/gq-get-ssh-keys -O /etc/rc.d/init.d/gq-get-ssh-keys
-wget http://s.greenqloud.com/template-scripts/qstack-agents/gq-get-userdata -O /etc/rc.d/init.d/gq-get-userdata
+wget http://s.greenqloud.com/template-scripts/centos/7.0/gq-create-ssh-keys -O /etc/rc.d/init.d/gq-create-ssh-keys
+wget http://s.greenqloud.com/template-scripts/centos/7.0/gq-get-passwd -O /etc/rc.d/init.d/gq-get-passwd
+wget http://s.greenqloud.com/template-scripts/centos/7.0/gq-get-ssh-keys -O /etc/rc.d/init.d/gq-get-ssh-keys
+wget http://s.greenqloud.com/template-scripts/centos/7.0/gq-get-userdata -O /etc/rc.d/init.d/gq-get-userdata
 
 
 chmod 755 /etc/rc.d/init.d/gq-create-ssh-keys

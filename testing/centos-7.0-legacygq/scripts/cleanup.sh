@@ -13,6 +13,9 @@ rm -rf *.iso *.iso.? /tmp/vbox /home/vagrant/.vbox_version
 # Cleanup log files
 find /var/log -type f | while read f; do echo -ne '' > $f; done;
 
+# Cleanup ssh host keys
+rm -f /etc/ssh/ssh_host_*key*
+
 # remove under tmp directory
 rm -rf /tmp/*
 
