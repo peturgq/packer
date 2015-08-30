@@ -32,3 +32,24 @@ runcmd:
 - service sshd restart
 EOF
 
+# Make systemd not start cloud-init until it sees a lease file
+sed -i 's/Wants=local-fs.target/Wants=local-fs.target network-online.target systemd-resolved.service dhcp-lease-ready.path/' /lib/systemd/system/cloud-init-local.service
+sed -i 's/After=local-fs.target/After=local-fs.target network-online.target systemd-resolved.service dhcp-lease-ready.path/' /lib/systemd/system/cloud-init-local.service
+
+cat <<EOF > /lib/systemd/system/dhcp-lease-ready.path
+[Unit]
+Description=Check for if dhcp lease is available
+
+[Path]
+DirectoryNotEmpty=/var/lib/dhcp/
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Enable the new service check
+systemctl enable dhcp-lease-ready.path
+
+# put time of build into /etc/build
+date --rfc-3339=seconds >> /etc/build
+
