@@ -1,7 +1,7 @@
 {
   "variables": {
     "image_basename": "coreos-stable",
-    "disk_size": "320",
+    "disk_size": "10240",
     "ssh_username": "core",
     "channel": "stable",
     "version": "current",
